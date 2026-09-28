@@ -8,7 +8,7 @@ Persönliche App zum Festhalten und Bewerten täglicher Routinen – nutzbar am 
 |---|---|
 | **Routinen** | fertig |
 | Ausgaben | Platzhalter, folgt |
-| Rauchen | Platzhalter, folgt |
+| **Rauchen** | fertig |
 
 ## Routinen
 
@@ -18,6 +18,17 @@ Persönliche App zum Festhalten und Bewerten täglicher Routinen – nutzbar am 
 - **Zuverlässigkeit** = erledigte ÷ fällige Aufgaben, inklusive heute. Offene Routinen zählen sofort als nicht erledigt (4 Routinen, 1 erledigt → 25 %).
 - Serie (Tage am Stück) und die letzten 14 Tage je Routine.
 - Reihenfolge per Drag and Drop: Karte ziehen, am Handy kurz gedrückt halten und dann ziehen.
+
+## Rauchen
+
+- Preis pro Zigarette festlegen (wird mit jeder Erfassung gespeichert, spätere Preisänderungen verfälschen alte Kosten nicht).
+- Ein Knopf erfasst eine Zigarette mit Datum und Uhrzeit; jede weitere Erfassung ist sofort möglich.
+- Großer Zähler: **Minuten seit der letzten Zigarette**, aktualisiert sich laufend.
+- Ziel: Abstände vergrößern. Der Balken vergleicht den laufenden Abstand mit dem Ø-Abstand der letzten 7 Tage und markiert den Rekord.
+- Kennzahlen: Anzahl heute (und gestern), Kosten heute / 7 Tage, Ø-Abstand heute / 7 Tage, Rekord-Abstand.
+- Verlauf der letzten 14 Tage (Ø-Abstand je Tag und Anzahl).
+- Letzte Erfassung 15 Minuten lang rückgängig machen, Einträge löschen, vergessene Zigaretten nachtragen.
+- Abstände zählen nur innerhalb eines Tages – die Nacht fließt nicht in die Durchschnitte ein.
 
 ## Nutzung
 

@@ -177,6 +177,54 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .filebtn input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .editing{background:var(--accent-soft);border-radius:10px;padding:8px 10px;font-size:13px;font-weight:600;color:var(--accent)}
 
+/* Rauchen */
+.smoke-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;margin-top:14px}
+@media (min-width:900px){.smoke-grid{grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);align-items:start}}
+.smoke-main{display:flex;flex-direction:column;gap:14px}
+.timer-card{background:var(--surface);border-radius:18px;box-shadow:var(--shadow);padding:22px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.timer-card .lbl{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.timer{font-family:var(--display);font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:8px;margin-top:4px}
+.timer #tMin{font-size:clamp(64px,16vw,96px)}
+.timer .unit{font-size:22px;color:var(--muted);letter-spacing:0}
+.timer-card[data-state="above"] #tMin,.timer-card[data-state="record"] #tMin{color:var(--done)}
+.tsub{color:var(--muted);font-size:14px}
+.goal{width:100%;max-width:440px;margin-top:10px}
+.goalbar{position:relative;height:10px;border-radius:999px;background:var(--empty);overflow:visible}
+.goalbar i{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:var(--accent);width:0}
+.timer-card[data-state="above"] .goalbar i,.timer-card[data-state="record"] .goalbar i{background:var(--done)}
+.goalbar b{position:absolute;top:-4px;bottom:-4px;width:3px;border-radius:2px;background:var(--ink);transform:translateX(-50%)}
+.goaltext{font-size:13.5px;margin-top:8px;color:var(--ink)}
+.goaltext strong{font-weight:700}
+.smoke-btn{margin-top:14px;border:0;border-radius:14px;background:var(--ink);color:var(--bg);font-weight:700;font-size:17px;padding:16px 26px;width:100%;max-width:440px;display:inline-flex;align-items:center;justify-content:center;gap:10px}
+.smoke-btn svg{width:20px;height:20px}
+.smoke-btn:active{transform:scale(.98)}
+.undo{margin-top:2px}
+.smoke-stats{grid-template-columns:repeat(4,minmax(0,1fr));margin:0}
+@media (max-width:720px){.smoke-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.smoke-stats .stat:nth-child(3){grid-column:auto}}
+.chart-card .note{margin-top:10px}
+.bars{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:4px;align-items:end;height:130px;margin-top:12px}
+.bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px;min-width:0}
+.bar .v{font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar i{display:block;width:100%;border-radius:4px 4px 2px 2px;background:var(--accent);min-height:3px}
+.bar.today i{background:var(--done)}
+.bar.none i{background:var(--empty)}
+.bar-axis{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:4px;margin-top:4px;font-size:10.5px;color:var(--faint);text-align:center;font-variant-numeric:tabular-nums}
+.bar-axis span b{display:block;color:var(--ink);font-weight:600}
+.hint{font-size:12.5px;color:var(--muted)}
+.panel h2.mt{margin-top:22px}
+.logday{margin-top:12px}
+.logday h3{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.logrow{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.logrow .tm{font-weight:700;min-width:52px}
+.logrow .gap{flex:1;color:var(--muted);font-size:13px}
+.logrow .price{color:var(--muted);font-size:13px}
+.logrow .x{border:0;background:none;color:var(--faint);width:30px;height:30px;border-radius:8px;display:grid;place-items:center}
+.logrow .x:hover{color:var(--miss);background:var(--miss-soft)}
+.logrow .x svg{width:14px;height:14px}
+.logconfirm{display:flex;gap:6px;align-items:center;font-size:13px}
+.logconfirm button{padding:6px 10px;font-size:13px}
+.emptylog{color:var(--muted);font-size:13.5px;margin-top:8px}
+
 /* Placeholder tabs */
 .soon{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:28px 22px;margin-top:14px;max-width:620px}
 .soon h2{font-size:24px;margin-bottom:8px}
@@ -279,9 +327,58 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
     </div>
   </section>
   <section id="tab-rauchen" role="tabpanel" aria-labelledby="t-rauchen" hidden>
-    <div class="soon">
-      <h2>Rauchen</h2>
-      <p>Dieser Bereich ist vorbereitet und wird in einem späteren Schritt gebaut.</p>
+    <div class="smoke-grid">
+      <div class="smoke-main">
+        <div class="timer-card" id="timerCard" data-state="none">
+          <div class="lbl">Seit der letzten Zigarette</div>
+          <div class="timer"><span id="tMin">–</span><span class="unit">Min</span></div>
+          <div class="tsub" id="tSub">Noch keine Zigarette erfasst.</div>
+          <div class="goal" id="goal" hidden>
+            <div class="goalbar" aria-hidden="true"><i id="goalFill"></i><b id="goalMark" title="Rekord"></b></div>
+            <div class="goaltext" id="goalText"></div>
+          </div>
+          <button class="smoke-btn" id="smokeBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            Zigarette erfassen
+          </button>
+          <button class="small undo" id="undoBtn" type="button" hidden></button>
+        </div>
+
+        <div class="summary smoke-stats">
+          <div class="stat"><div class="lbl">Heute</div><div class="val" id="kToday">0</div><div class="sub" id="kTodaySub">Zigaretten</div></div>
+          <div class="stat"><div class="lbl">Kosten heute</div><div class="val" id="kCost">–</div><div class="sub" id="kCostSub">7 Tage: –</div></div>
+          <div class="stat"><div class="lbl">Ø Abstand heute</div><div class="val" id="kAvg">–</div><div class="sub" id="kAvgSub">7 Tage: –</div></div>
+          <div class="stat"><div class="lbl">Rekord-Abstand</div><div class="val" id="kRec">–</div><div class="sub" id="kRecSub">längste Pause am Tag</div></div>
+        </div>
+
+        <div class="stat chart-card">
+          <div class="lbl">Ø Abstand je Tag · letzte 14 Tage</div>
+          <div class="bars" id="smokeBars"></div>
+          <p class="note">Gezählt werden nur Abstände innerhalb eines Tages – die Nacht fließt nicht ein. Die Zahl unter jedem Balken ist die Anzahl Zigaretten.</p>
+        </div>
+      </div>
+
+      <aside class="panel">
+        <h2>Preis</h2>
+        <form id="priceForm" autocomplete="off">
+          <label for="fPrice">Preis pro Zigarette in €
+            <input type="text" id="fPrice" inputmode="decimal" placeholder="z. B. 0,45">
+          </label>
+          <div class="hint" id="priceHint">Tipp: Schachtelpreis ÷ Stückzahl, z. B. 9,00 € ÷ 20 = 0,45 €</div>
+          <div class="row"><button class="btn" type="submit">Preis speichern</button></div>
+        </form>
+
+        <h2 class="mt">Nachtragen</h2>
+        <form id="lateForm" autocomplete="off">
+          <label for="fWhen">Datum und Uhrzeit
+            <input type="datetime-local" id="fWhen" required>
+          </label>
+          <div class="row"><button class="btn ghost" type="submit">Zigarette nachtragen</button></div>
+        </form>
+
+        <h2 class="mt">Verlauf <span class="hint">heute und gestern</span></h2>
+        <div id="smokeLog"></div>
+      </aside>
     </div>
   </section>
 </main>
@@ -305,7 +402,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
   const fmtNum = n => n.toLocaleString('de-DE');
   const clone = o => JSON.parse(JSON.stringify(o || {}));
 
-  const state = { routines:[], months:{}, sel: today(), editId:null, confirmDel:null, db:null, mode:'loading' };
+  const state = { routines:[], months:{}, smoke:{ price:null, entries:[] }, smokeDel:null, sel: today(), editId:null, confirmDel:null, db:null, mode:'loading' };
   const writing = {}, dirty = {};
 
   /* ---------- Berechnung ---------- */
@@ -510,8 +607,19 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
   }
 
   const STORE_KEY = 'ruti-data-v1';
+  function cleanSmoke(s){
+    const out = { price: null, entries: [] };
+    if (s && typeof s === 'object'){
+      if (typeof s.price === 'number' && isFinite(s.price) && s.price >= 0) out.price = s.price;
+      if (Array.isArray(s.entries)) out.entries = s.entries
+        .filter(e => e && typeof e.t === 'number' && isFinite(e.t))
+        .map(e => ({ t: e.t, p: typeof e.p === 'number' ? e.p : null }))
+        .sort((a,b) => a.t - b.t);
+    }
+    return out;
+  }
   function persist(){
-    try { localStorage.setItem(STORE_KEY, JSON.stringify({ version:1, routines: state.routines, months: state.months })); state.storageOk = true; }
+    try { localStorage.setItem(STORE_KEY, JSON.stringify({ version:1, routines: state.routines, months: state.months, smoke: state.smoke })); state.storageOk = true; }
     catch(e){ state.storageOk = false; render(); }
   }
   function loadLocal(){
@@ -522,13 +630,14 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
       const d = JSON.parse(raw);
       if (Array.isArray(d.routines)) state.routines = d.routines.filter(r => r && r.id && r.name && r.start);
       if (d.months && typeof d.months === 'object') state.months = d.months;
+      state.smoke = cleanSmoke(d.smoke);
     } catch(e){ state.storageOk = false; }
   }
 
   // Sicherung
   let pendingImport = null;
   $('exportBtn').addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify({ version:1, exported: new Date().toISOString(), routines: state.routines, months: state.months }, null, 2)], { type:'application/json' });
+    const blob = new Blob([JSON.stringify({ version:1, exported: new Date().toISOString(), routines: state.routines, months: state.months, smoke: state.smoke }, null, 2)], { type:'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'ruti-sicherung-'+today()+'.json';
@@ -546,7 +655,8 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
         const d = JSON.parse(rd.result);
         if (!Array.isArray(d.routines) || typeof d.months !== 'object') throw 0;
         pendingImport = d;
-        $('importText').textContent = 'Sicherung mit '+d.routines.length+' Routinen'+(d.exported ? ' vom '+new Date(d.exported).toLocaleDateString('de-DE') : '')+' laden? Die Daten auf diesem Gerät werden dabei ersetzt.';
+        const nCig = d.smoke && Array.isArray(d.smoke.entries) ? d.smoke.entries.length : 0;
+        $('importText').textContent = 'Sicherung mit '+d.routines.length+' Routinen und '+nCig+' erfassten Zigaretten'+(d.exported ? ' vom '+new Date(d.exported).toLocaleDateString('de-DE') : '')+' laden? Die Daten auf diesem Gerät werden dabei ersetzt.';
         $('importConfirm').hidden = false;
       } catch(err){ toast('Diese Datei ist keine Ruti-Sicherung.'); }
     };
@@ -556,8 +666,9 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
     if (!pendingImport) return;
     state.routines = pendingImport.routines.filter(r => r && r.id && r.name && r.start);
     state.months = pendingImport.months || {};
+    state.smoke = cleanSmoke(pendingImport.smoke);
     pendingImport = null; $('importConfirm').hidden = true;
-    resetForm(); persist(); render(); toast('Sicherung geladen');
+    resetForm(); persist(); render(); initSmokeForms(); renderSmoke(); toast('Sicherung geladen');
   });
   $('importNo').addEventListener('click', () => { pendingImport = null; $('importConfirm').hidden = true; });
   async function flush(mk){
@@ -716,6 +827,220 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
   });
   $('fCancel').addEventListener('click', resetForm);
 
+  /* ---------- Rauchen ---------- */
+  const eur = n => n.toLocaleString('de-DE', { style:'currency', currency:'EUR' });
+  const hm = ts => new Date(ts).toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
+  const dayOf = ts => ymd(new Date(ts));
+  function durText(min){
+    min = Math.max(0, Math.round(min));
+    if (min < 60) return min+' Min';
+    const h = Math.floor(min/60), m = min % 60;
+    return h+' Std'+(m ? ' '+m+' Min' : '');
+  }
+  function dayLabel(d){
+    const t = today();
+    if (d === t) return 'Heute';
+    if (d === addDays(t,-1)) return 'Gestern';
+    return fmtShort(d);
+  }
+  // Abstände innerhalb eines Tages (die Nacht zählt nicht)
+  function smokeGaps(){
+    const e = state.smoke.entries, gaps = [];
+    for (let i = 1; i < e.length; i++){
+      const d = dayOf(e[i].t);
+      if (dayOf(e[i-1].t) === d) gaps.push({ day: d, min: (e[i].t - e[i-1].t) / 60000, end: e[i].t });
+    }
+    return gaps;
+  }
+  const avg = arr => arr.length ? arr.reduce((a,b) => a+b, 0) / arr.length : null;
+
+  function renderSmoke(){
+    const s = state.smoke, e = s.entries, now = Date.now(), t = today();
+    const gaps = smokeGaps();
+    const since7 = addDays(t,-6);
+    const avgToday = avg(gaps.filter(g => g.day === t).map(g => g.min));
+    const avg7 = avg(gaps.filter(g => g.day >= since7).map(g => g.min));
+    const record = gaps.length ? Math.max(...gaps.map(g => g.min)) : null;
+    const last = e.length ? e[e.length-1] : null;
+
+    // Timer
+    const card = $('timerCard');
+    if (!last){
+      $('tMin').textContent = '–';
+      $('tSub').textContent = 'Noch keine Zigarette erfasst. Tippe auf den Knopf, sobald du eine geraucht hast.';
+      $('goal').hidden = true; card.dataset.state = 'none';
+    } else {
+      const cur = (now - last.t) / 60000;
+      $('tMin').textContent = fmtNum(Math.floor(cur));
+      $('tSub').textContent = 'Letzte: '+dayLabel(dayOf(last.t))+', '+hm(last.t)+' Uhr'+(cur >= 60 ? ' · '+durText(cur) : '');
+      const target = avg7 !== null ? avg7 : null;
+      if (target === null){
+        $('goal').hidden = false;
+        $('goalFill').style.width = '0%'; $('goalMark').hidden = true;
+        $('goalText').textContent = 'Ab der zweiten Zigarette an einem Tag berechne ich deinen Durchschnitts-Abstand als Ziel.';
+        card.dataset.state = 'none';
+      } else {
+        const scale = Math.max(target, record || 0, cur) * 1.08;
+        $('goal').hidden = false;
+        $('goalFill').style.width = Math.min(100, cur/scale*100)+'%';
+        $('goalMark').hidden = !record; if (record) $('goalMark').style.left = (record/scale*100)+'%';
+        const gt = $('goalText'); gt.innerHTML = '';
+        const strong = document.createElement('strong');
+        if (record !== null && cur > record){
+          card.dataset.state = 'record';
+          strong.textContent = 'Neuer Rekord läuft! ';
+          gt.append(strong, document.createTextNode(durText(cur - record)+' länger als deine bisher längste Pause.'));
+        } else if (cur >= target){
+          card.dataset.state = 'above';
+          strong.textContent = durText(cur - target)+' über deinem Schnitt. ';
+          gt.append(strong, document.createTextNode(record ? 'Rekord: '+durText(record)+' – noch '+durText(record - cur)+'.' : 'Weiter so.'));
+        } else {
+          card.dataset.state = 'below';
+          strong.textContent = 'Noch '+durText(target - cur)+' ';
+          gt.append(strong, document.createTextNode('bis zu deinem Schnitt von '+durText(target)+' (7 Tage).'));
+        }
+      }
+    }
+    const undo = $('undoBtn');
+    if (last && now - (last.added || last.t) < 15*60000){ undo.hidden = false; undo.textContent = 'Letzte Erfassung ('+hm(last.t)+' Uhr) rückgängig machen'; }
+    else undo.hidden = true;
+
+    // Kennzahlen
+    const todayE = e.filter(x => dayOf(x.t) === t);
+    const weekE = e.filter(x => dayOf(x.t) >= since7);
+    const cost = arr => arr.reduce((a,x) => a + (x.p || 0), 0);
+    const missingPrice = arr => arr.some(x => x.p === null);
+    $('kToday').textContent = fmtNum(todayE.length);
+    const yest = e.filter(x => dayOf(x.t) === addDays(t,-1)).length;
+    $('kTodaySub').textContent = (todayE.length === 1 ? 'Zigarette' : 'Zigaretten')+' · gestern '+yest;
+    if (s.price === null && !e.some(x => x.p !== null)){ $('kCost').textContent = '–'; $('kCostSub').textContent = 'Preis rechts eintragen'; }
+    else {
+      $('kCost').textContent = eur(cost(todayE));
+      $('kCostSub').textContent = '7 Tage: '+eur(cost(weekE))+(missingPrice(weekE) ? ' (ohne Preis erfasste fehlen)' : '');
+    }
+    const minT = m => fmtNum(Math.round(m))+' Min';
+    $('kAvg').textContent = avgToday === null ? '–' : minT(avgToday);
+    $('kAvgSub').textContent = '7 Tage: '+(avg7 === null ? '–' : minT(avg7));
+    $('kRec').textContent = record === null ? '–' : minT(record);
+    const recGap = record === null ? null : gaps.find(g => g.min === record);
+    $('kRecSub').textContent = recGap ? 'am '+parse(recGap.day).toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' }) : 'längste Pause am Tag';
+
+    // Balken 14 Tage
+    const bars = $('smokeBars'); bars.innerHTML = '';
+    const days = []; for (let i = 13; i >= 0; i--) days.push(addDays(t,-i));
+    const perDay = days.map(d => ({ d, a: avg(gaps.filter(g => g.day === d).map(g => g.min)), n: e.filter(x => dayOf(x.t) === d).length }));
+    const maxA = Math.max(30, ...perDay.map(p => p.a || 0));
+    perDay.forEach(p => {
+      const b = document.createElement('div'); b.className = 'bar'+(p.d === t ? ' today' : '')+(p.a === null ? ' none' : '');
+      const v = document.createElement('span'); v.className = 'v'; v.textContent = p.a === null ? '' : Math.round(p.a);
+      const i = document.createElement('i'); i.style.height = p.a === null ? '3px' : Math.max(4, p.a/maxA*100 - 12)+'%';
+      b.title = fmtShort(p.d)+': '+p.n+' Zigaretten'+(p.a === null ? '' : ', Ø Abstand '+durText(p.a));
+      b.append(v, i); bars.appendChild(b);
+    });
+    let axis = bars.nextElementSibling;
+    if (!axis || !axis.classList.contains('bar-axis')){ axis = document.createElement('div'); axis.className = 'bar-axis'; bars.after(axis); }
+    axis.innerHTML = '';
+    perDay.forEach(p => {
+      const sp = document.createElement('span');
+      const n = document.createElement('b'); n.textContent = p.n;
+      sp.append(n, document.createTextNode(p.d === t ? 'heute' : parse(p.d).toLocaleDateString('de-DE', { weekday:'short' }).slice(0,2)));
+      axis.appendChild(sp);
+    });
+
+    renderSmokeLog();
+  }
+
+  const ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  function renderSmokeLog(){
+    const box = $('smokeLog'); box.innerHTML = '';
+    const e = state.smoke.entries;
+    if (!e.length){ box.innerHTML = '<p class="emptylog">Noch keine Einträge.</p>'; return; }
+    const from = addDays(today(), -1);
+    const shown = e.filter(x => dayOf(x.t) >= from).slice(-40).reverse();
+    if (!shown.length){ box.innerHTML = '<p class="emptylog">Heute und gestern noch keine Einträge.</p>'; return; }
+    let curDay = null, wrap = null;
+    shown.forEach(x => {
+      const d = dayOf(x.t);
+      if (d !== curDay){
+        curDay = d; wrap = document.createElement('div'); wrap.className = 'logday';
+        const h = document.createElement('h3');
+        const n = e.filter(y => dayOf(y.t) === d).length;
+        h.textContent = dayLabel(d)+' · '+n+' Stück'; wrap.appendChild(h); box.appendChild(wrap);
+      }
+      const idx = e.indexOf(x), prev = idx > 0 ? e[idx-1] : null;
+      const row = document.createElement('div'); row.className = 'logrow';
+      const tm = document.createElement('span'); tm.className = 'tm'; tm.textContent = hm(x.t);
+      const gap = document.createElement('span'); gap.className = 'gap';
+      gap.textContent = prev && dayOf(prev.t) === d ? '+'+durText((x.t - prev.t)/60000)+' Abstand' : 'erste des Tages';
+      row.append(tm, gap);
+      if (state.smokeDel === x.t){
+        const c = document.createElement('div'); c.className = 'logconfirm';
+        const yes = document.createElement('button'); yes.type = 'button'; yes.className = 'btn danger'; yes.textContent = 'Löschen';
+        yes.addEventListener('click', () => { state.smoke.entries = state.smoke.entries.filter(y => y !== x); state.smokeDel = null; persist(); renderSmoke(); toast('Eintrag gelöscht'); });
+        const no = document.createElement('button'); no.type = 'button'; no.className = 'btn ghost'; no.textContent = 'Nein';
+        no.addEventListener('click', () => { state.smokeDel = null; renderSmokeLog(); });
+        c.append(yes, no); row.appendChild(c);
+      } else {
+        if (x.p !== null){ const pr = document.createElement('span'); pr.className = 'price'; pr.textContent = eur(x.p); row.appendChild(pr); }
+        const del = document.createElement('button'); del.type = 'button'; del.className = 'x'; del.innerHTML = ICON_X;
+        del.setAttribute('aria-label', 'Eintrag '+hm(x.t)+' löschen');
+        del.addEventListener('click', () => { state.smokeDel = x.t; renderSmokeLog(); });
+        row.appendChild(del);
+      }
+      wrap.appendChild(row);
+    });
+  }
+
+  function addCigarette(ts){
+    const entry = { t: ts, p: state.smoke.price, added: Date.now() };
+    state.smoke.entries.push(entry);
+    state.smoke.entries.sort((a,b) => a.t - b.t);
+    persist(); renderSmoke();
+  }
+  $('smokeBtn').addEventListener('click', () => {
+    const e = state.smoke.entries, last = e.length ? e[e.length-1] : null;
+    const gap = last ? (Date.now() - last.t) / 60000 : null;
+    addCigarette(Date.now());
+    toast('Erfasst um '+hm(Date.now())+' Uhr'+(gap !== null && dayOf(last.t) === today() ? ' · Abstand '+durText(gap) : ''));
+  });
+  $('undoBtn').addEventListener('click', () => {
+    const e = state.smoke.entries; if (!e.length) return;
+    let li = 0; e.forEach((x,i) => { if ((x.added || x.t) >= (e[li].added || e[li].t)) li = i; });
+    const removed = e.splice(li, 1)[0];
+    persist(); renderSmoke(); toast('Erfassung '+hm(removed.t)+' Uhr entfernt');
+  });
+  function parsePrice(v){
+    v = String(v).trim().replace('€','').replace(/\s/g,'').replace(',', '.');
+    if (v === '') return null;
+    const n = Number(v);
+    return isFinite(n) && n >= 0 && n < 100 ? Math.round(n*100)/100 : NaN;
+  }
+  $('priceForm').addEventListener('submit', ev => {
+    ev.preventDefault();
+    const p = parsePrice($('fPrice').value);
+    if (Number.isNaN(p)){ toast('Bitte einen Preis wie 0,45 eingeben.'); $('fPrice').focus(); return; }
+    state.smoke.price = p;
+    $('fPrice').value = p === null ? '' : p.toFixed(2).replace('.', ',');
+    persist(); renderSmoke();
+    toast(p === null ? 'Preis entfernt' : 'Preis gespeichert: '+eur(p)+' pro Zigarette');
+  });
+  function localInputValue(d){ return ymd(d)+'T'+pad(d.getHours())+':'+pad(d.getMinutes()); }
+  $('lateForm').addEventListener('submit', ev => {
+    ev.preventDefault();
+    const v = $('fWhen').value; if (!v) return;
+    const [dp, tp] = v.split('T'); const [y,m,d] = dp.split('-').map(Number); const [hh,mm] = tp.split(':').map(Number);
+    const ts = new Date(y, m-1, d, hh, mm).getTime();
+    if (ts > Date.now() + 60000){ toast('Der Zeitpunkt liegt in der Zukunft.'); return; }
+    addCigarette(ts);
+    toast('Nachgetragen: '+dayLabel(dayOf(ts))+', '+hm(ts)+' Uhr');
+  });
+  function initSmokeForms(){
+    $('fPrice').value = state.smoke.price === null ? '' : state.smoke.price.toFixed(2).replace('.', ',');
+    $('fWhen').value = localInputValue(new Date());
+    $('fWhen').max = localInputValue(new Date());
+  }
+  setInterval(() => { if (!$('tab-rauchen').hidden && !document.hidden) renderSmoke(); }, 15000);
+
   /* ---------- Navigation ---------- */
   $('prevDay').addEventListener('click', () => { state.sel = addDays(state.sel,-1); render(); });
   $('nextDay').addEventListener('click', () => { if (state.sel < today()){ state.sel = addDays(state.sel,1); render(); } });
@@ -729,6 +1054,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
       $('t-'+t).setAttribute('aria-selected', t === name ? 'true' : 'false');
     });
     try { localStorage.setItem('ruti-tab', name); } catch(e){}
+    if (name === 'rauchen'){ $('fWhen').max = localInputValue(new Date()); renderSmoke(); }
   }
   document.querySelectorAll('.tabbar button').forEach(b => b.addEventListener('click', () => { showTab(b.dataset.tab); window.scrollTo(0,0); }));
   let startTab = (location.hash || '').slice(1);
@@ -738,7 +1064,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
   // Tageswechsel um Mitternacht / beim Zurückkehren zur App
   let lastDay = today();
   function dayCheck(){ const t = today(); if (t !== lastDay){ if (state.sel === lastDay) state.sel = t; lastDay = t; render(); } }
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) dayCheck(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden){ dayCheck(); if (!$('tab-rauchen').hidden) renderSmoke(); } });
   setInterval(dayCheck, 60000);
 
   /* ---------- Start ---------- */
@@ -747,7 +1073,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
   (async () => {
     let db = null;
     try { if (window.claude && window.claude.use) db = await window.claude.use('db'); } catch(e){ db = null; }
-    if (!db){ loadLocal(); state.mode = 'local'; render(); return; }
+    if (!db){ loadLocal(); state.mode = 'local'; initSmokeForms(); render(); renderSmoke(); return; }
     state.db = db;
     let gotR = false, gotC = false;
     const ready = () => { if (gotR && gotC && state.mode !== 'live'){ state.mode = 'live'; } render(); };
