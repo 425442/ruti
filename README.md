@@ -7,7 +7,7 @@ Persönliche App zum Festhalten und Bewerten täglicher Routinen – nutzbar am 
 | Tab | Stand |
 |---|---|
 | **Routinen** | fertig |
-| Ausgaben | Platzhalter, folgt |
+| **Ausgaben** | fertig |
 | **Rauchen** | fertig |
 
 ## Routinen
@@ -18,6 +18,14 @@ Persönliche App zum Festhalten und Bewerten täglicher Routinen – nutzbar am 
 - **Zuverlässigkeit** = erledigte ÷ fällige Aufgaben, inklusive heute. Offene Routinen zählen sofort als nicht erledigt (4 Routinen, 1 erledigt → 25 %).
 - Serie (Tage am Stück) und die letzten 14 Tage je Routine.
 - Reihenfolge per Drag and Drop: Karte ziehen, am Handy kurz gedrückt halten und dann ziehen.
+
+## Ausgaben
+
+- Ausgaben pro Tag erfassen: Betrag, Datum, Kategorie, Notiz. Jede Ausgabe lässt sich bearbeiten und löschen.
+- Kategorien selbst anlegen, umbenennen und löschen (Ausgaben einer gelöschten Kategorie landen in „Ohne Kategorie“).
+- Kategorie **Rauchen** wird automatisch aus dem Tab Rauchen befüllt (Anzahl × Preis je Tag).
+- Übersicht in € und % nach Kategorie für **Tag, Woche (KW), Monat und gesamt**, mit Blättern in die Vergangenheit.
+- **Tagesbudget** mit Startdatum. Budget-Vergleich (unter/über) für Tag, Woche, Monat und gesamt – gezählt werden die Tage bis heute.
 
 ## Rauchen
 

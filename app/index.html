@@ -22,6 +22,7 @@
   --display:"Bricolage Grotesque","Figtree",system-ui,sans-serif;
   --body:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --tabbar-h:64px;
+  --c0:#2a78d6; --c1:#eb6834; --c2:#1baf7a; --c3:#eda100; --c4:#e87ba4; --c5:#008300; --c6:#4a3aa7; --c7:#e34948; --cnone:#A3ADA9;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -32,6 +33,7 @@
     --done:#43C58A; --done-soft:#173A2A; --miss:#F07A70; --miss-soft:#40201D;
     --empty:#27322E;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+    --c0:#3987e5; --c1:#d95926; --c2:#199e70; --c3:#c98500; --c4:#d55181; --c5:#008300; --c6:#9085e9; --c7:#e66767; --cnone:#5D6863;
   }
 }
 :root[data-theme="dark"]{
@@ -42,6 +44,7 @@
   --done:#43C58A; --done-soft:#173A2A; --miss:#F07A70; --miss-soft:#40201D;
   --empty:#27322E;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  --c0:#3987e5; --c1:#d95926; --c2:#199e70; --c3:#c98500; --c4:#d55181; --c5:#008300; --c6:#9085e9; --c7:#e66767; --cnone:#5D6863;
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
@@ -225,6 +228,86 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .logconfirm button{padding:6px 10px;font-size:13px}
 .emptylog{color:var(--muted);font-size:13.5px;margin-top:8px}
 
+/* Ausgaben */
+.exp-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px}
+.seg button{border:0;background:none;padding:8px 14px;border-radius:9px;font-weight:600;font-size:14px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.exp-grid{margin-top:12px}
+.budget-card .bc-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.budget-card .val{font-size:clamp(30px,7vw,42px)}
+.bc-diff{font-weight:700;font-size:14.5px;padding:5px 11px;border-radius:999px;background:var(--surface-2);color:var(--muted);font-variant-numeric:tabular-nums}
+.budget-card[data-s="under"] .bc-diff{background:var(--done-soft);color:var(--done)}
+.budget-card[data-s="over"] .bc-diff{background:var(--miss-soft);color:var(--miss)}
+.bc-bar{height:10px;border-radius:999px;background:var(--empty);margin-top:12px;overflow:hidden}
+.bc-bar i{display:block;height:100%;width:0;border-radius:999px;background:var(--done)}
+.budget-card[data-s="over"] .bc-bar i{background:var(--miss)}
+.budget-card[data-s="none"] .bc-bar{display:none}
+.budget-card .sub{margin-top:8px}
+.tablewrap{overflow-x:auto;margin-top:8px}
+.ovt{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px}
+.ovt th{font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+.ovt td{padding:10px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.ovt .num{text-align:right}
+.ovt tbody tr{cursor:pointer}
+.ovt tbody tr:hover td{background:var(--surface-2)}
+.ovt tbody tr.sel td{background:var(--accent-soft)}
+.ovt td small{display:block;color:var(--muted);font-size:12px}
+.ovt .under{color:var(--done);font-weight:700}
+.ovt .over{color:var(--miss);font-weight:700}
+.stack{display:flex;gap:2px;height:14px;border-radius:7px;overflow:hidden;margin-top:12px;background:var(--empty)}
+.stack i{display:block;height:100%}
+.catrow{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.catrow:last-child{border-bottom:0}
+.catname{display:flex;align-items:center;gap:8px;min-width:0;font-weight:600}
+.catname span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{width:11px;height:11px;border-radius:3px;flex:none}
+.cbar{height:8px;border-radius:4px;background:var(--empty);overflow:hidden}
+.cbar i{display:block;height:100%;border-radius:4px}
+.catrow .eur{font-weight:700;text-align:right;min-width:78px}
+.catrow .pct{color:var(--muted);text-align:right;min-width:44px}
+@media (max-width:520px){.catrow{grid-template-columns:minmax(0,1fr) auto auto}.catrow .cbar{grid-column:1/-1;order:5}}
+.explist .dayh{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:14px 0 2px;display:flex;justify-content:space-between}
+.explist .dayh:first-child{margin-top:8px}
+.exprow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;flex-wrap:wrap}
+.exprow .what{flex:1;min-width:0}
+.exprow .what div:first-child{display:flex;align-items:center;gap:7px;font-weight:600}
+.exprow .what div:last-child{color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.exprow .amt{font-weight:700}
+.exprow .auto{font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 7px;font-weight:600}
+.exprow .confirm{flex-basis:100%}
+.exprow.editing-row{background:var(--accent-soft);border-radius:8px;padding-inline:8px}
+.row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+select{border:1.5px solid var(--line);background:var(--surface-2);border-radius:10px;padding:9px 11px;font-size:15px;width:100%;color:var(--ink)}
+select:focus{outline:none;border-color:var(--accent)}
+.inline-add{flex-direction:row;gap:8px;margin-top:10px}
+.inline-add input{flex:1;min-width:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+#catSuggest{margin-top:10px}
+.catm{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.catm .nm{flex:1;min-width:0;display:flex;align-items:center;gap:8px;font-weight:600}
+.catm .nm small{color:var(--muted);font-weight:500}
+.catm input{flex:1;min-width:120px}
+.catm .confirm{flex-basis:100%}
+
+.exp-side{display:flex;flex-direction:column;gap:16px}
+@media (max-width:899px){
+  .exp-side{display:contents}
+  .exp-entry{order:-1}
+  .exp-settings{order:1}
+}
+.exp-grid > .smoke-main{order:0}
+@media (max-width:560px){
+  .ovt th:nth-child(3),.ovt td:nth-child(3){display:none}
+  .ovt td,.ovt th{padding-inline:6px}
+  .exprow .hint{display:none}
+}
+.catm .nm{flex-wrap:wrap;row-gap:0}
+.catm .nm small{flex-basis:100%;padding-left:19px}
+.exprow .what div:first-child{flex-wrap:wrap}
+.exprow .iconbtn{width:34px;height:34px}
+.exprow .iconbtn svg{width:16px;height:16px}
+.exprow .iconbtn.del:hover{color:var(--miss);border-color:var(--miss)}
 /* Placeholder tabs */
 .soon{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:28px 22px;margin-top:14px;max-width:620px}
 .soon h2{font-size:24px;margin-bottom:8px}
@@ -305,7 +388,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
         <ul class="mlist" id="manageList"></ul>
         <div class="backup" id="backup" hidden>
           <h3>Datensicherung</h3>
-          <p>Deine Daten liegen im Browser dieses Geräts. Mit einer Sicherungsdatei überträgst du sie auf ein anderes Gerät oder bewahrst sie auf.</p>
+          <p>Deine Daten liegen im Browser dieses Geräts. Die Sicherungsdatei enthält Routinen, Rauchen und Ausgaben – damit überträgst du alles auf ein anderes Gerät.</p>
           <div class="row">
             <button class="btn ghost" type="button" id="exportBtn">Sicherung speichern</button>
             <label class="btn ghost filebtn" for="importFile">Sicherung laden<input type="file" id="importFile" accept=".json,application/json"></label>
@@ -320,10 +403,106 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
   </section>
 
   <section id="tab-ausgaben" role="tabpanel" aria-labelledby="t-ausgaben" hidden>
-    <div class="soon">
-      <h2>Ausgaben</h2>
-      <p>Dieser Bereich ist vorbereitet und wird als Nächstes gebaut.</p>
-      <p>Die Routinen-Daten bleiben davon unberührt.</p>
+    <div class="exp-top">
+      <div class="seg" role="group" aria-label="Zeitraum">
+        <button type="button" data-p="day" aria-pressed="true">Tag</button>
+        <button type="button" data-p="week" aria-pressed="false">Woche</button>
+        <button type="button" data-p="month" aria-pressed="false">Monat</button>
+        <button type="button" data-p="all" aria-pressed="false">Gesamt</button>
+      </div>
+      <div class="daynav" id="expNav">
+        <button class="iconbtn" id="expPrev" aria-label="Zurück"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <span class="daylabel" id="expLabel"></span>
+        <button class="iconbtn" id="expNext" aria-label="Weiter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
+        <button class="todaybtn" id="expToday" hidden>Heute</button>
+      </div>
+    </div>
+
+    <div class="smoke-grid exp-grid">
+      <div class="smoke-main">
+        <div class="stat budget-card" id="budgetCard" data-s="none">
+          <div class="lbl" id="bcLbl">Ausgaben</div>
+          <div class="bc-row">
+            <div class="val" id="bcSpent">0,00 €</div>
+            <div class="bc-diff" id="bcDiff"></div>
+          </div>
+          <div class="bc-bar" aria-hidden="true"><i id="bcFill"></i></div>
+          <div class="sub" id="bcSub"></div>
+        </div>
+
+        <div class="stat">
+          <div class="lbl">Budget-Vergleich · alle Zeiträume</div>
+          <div class="tablewrap">
+            <table class="ovt" id="expOverview">
+              <thead><tr><th>Zeitraum</th><th class="num">Ausgaben</th><th class="num">Budget</th><th class="num">Differenz</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p class="note">Das Budget zählt nur die Tage bis heute (ab „gilt ab“). Tipp auf eine Zeile zeigt ihre Kategorien.</p>
+        </div>
+
+        <div class="stat">
+          <div class="lbl" id="catLbl">Nach Kategorie</div>
+          <div class="stack" id="catStack" aria-hidden="true"></div>
+          <div id="catRows"></div>
+        </div>
+
+        <div class="stat">
+          <div class="lbl" id="listLbl">Einträge</div>
+          <div id="expList"></div>
+        </div>
+      </div>
+
+      <div class="exp-side">
+      <aside class="panel exp-entry">
+        <h2 id="expFormTitle">Ausgabe erfassen</h2>
+        <form id="expForm" autocomplete="off">
+          <div class="editing" id="expEditHint" hidden></div>
+          <div class="row2">
+            <label for="eAmount">Betrag in €
+              <input type="text" id="eAmount" inputmode="decimal" placeholder="z. B. 12,90" required>
+            </label>
+            <label for="eDate">Datum
+              <input type="date" id="eDate" required>
+            </label>
+          </div>
+          <label for="eCat">Kategorie
+            <select id="eCat"></select>
+          </label>
+          <label for="eNote">Notiz (optional)
+            <input type="text" id="eNote" maxlength="120" placeholder="z. B. Wocheneinkauf">
+          </label>
+          <div class="row">
+            <button class="btn" type="submit" id="eSubmit">Ausgabe speichern</button>
+            <button class="btn ghost" type="button" id="eCancel" hidden>Abbrechen</button>
+          </div>
+        </form>
+
+      </aside>
+      <aside class="panel exp-settings">
+        <h2>Tagesbudget</h2>
+        <form id="budgetForm" autocomplete="off">
+          <div class="row2">
+            <label for="bAmount">Budget pro Tag in €
+              <input type="text" id="bAmount" inputmode="decimal" placeholder="z. B. 25,00">
+            </label>
+            <label for="bStart">gilt ab
+              <input type="date" id="bStart">
+            </label>
+          </div>
+          <div class="row"><button class="btn" type="submit">Budget speichern</button></div>
+        </form>
+
+        <h2 class="mt">Kategorien</h2>
+        <div id="catManage"></div>
+        <form id="catForm" class="inline-add" autocomplete="off">
+          <label for="cName" class="sr">Neue Kategorie</label>
+          <input type="text" id="cName" maxlength="40" placeholder="Neue Kategorie, z. B. Lebensmittel">
+          <button class="btn" type="submit">Anlegen</button>
+        </form>
+        <button class="btn ghost" type="button" id="catSuggest" hidden>Vorschläge übernehmen</button>
+      </aside>
+      </div>
     </div>
   </section>
   <section id="tab-rauchen" role="tabpanel" aria-labelledby="t-rauchen" hidden>
@@ -402,7 +581,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
   const fmtNum = n => n.toLocaleString('de-DE');
   const clone = o => JSON.parse(JSON.stringify(o || {}));
 
-  const state = { routines:[], months:{}, smoke:{ price:null, entries:[] }, smokeDel:null, sel: today(), editId:null, confirmDel:null, db:null, mode:'loading' };
+  const state = { routines:[], months:{}, smoke:{ price:null, entries:[] }, exp:{ cats:[], entries:[], budget:null, budgetStart:null }, smokeDel:null, sel: today(), editId:null, confirmDel:null, db:null, mode:'loading' };
   const writing = {}, dirty = {};
 
   /* ---------- Berechnung ---------- */
@@ -619,7 +798,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
     return out;
   }
   function persist(){
-    try { localStorage.setItem(STORE_KEY, JSON.stringify({ version:1, routines: state.routines, months: state.months, smoke: state.smoke })); state.storageOk = true; }
+    try { localStorage.setItem(STORE_KEY, JSON.stringify({ version:1, routines: state.routines, months: state.months, smoke: state.smoke, exp: state.exp })); state.storageOk = true; }
     catch(e){ state.storageOk = false; render(); }
   }
   function loadLocal(){
@@ -631,13 +810,14 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
       if (Array.isArray(d.routines)) state.routines = d.routines.filter(r => r && r.id && r.name && r.start);
       if (d.months && typeof d.months === 'object') state.months = d.months;
       state.smoke = cleanSmoke(d.smoke);
+      state.exp = cleanExp(d.exp);
     } catch(e){ state.storageOk = false; }
   }
 
   // Sicherung
   let pendingImport = null;
   $('exportBtn').addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify({ version:1, exported: new Date().toISOString(), routines: state.routines, months: state.months, smoke: state.smoke }, null, 2)], { type:'application/json' });
+    const blob = new Blob([JSON.stringify({ version:1, exported: new Date().toISOString(), routines: state.routines, months: state.months, smoke: state.smoke, exp: state.exp }, null, 2)], { type:'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'ruti-sicherung-'+today()+'.json';
@@ -656,7 +836,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
         if (!Array.isArray(d.routines) || typeof d.months !== 'object') throw 0;
         pendingImport = d;
         const nCig = d.smoke && Array.isArray(d.smoke.entries) ? d.smoke.entries.length : 0;
-        $('importText').textContent = 'Sicherung mit '+d.routines.length+' Routinen und '+nCig+' erfassten Zigaretten'+(d.exported ? ' vom '+new Date(d.exported).toLocaleDateString('de-DE') : '')+' laden? Die Daten auf diesem Gerät werden dabei ersetzt.';
+        $('importText').textContent = 'Sicherung mit '+d.routines.length+' Routinen, '+nCig+' Zigaretten und '+(d.exp && Array.isArray(d.exp.entries) ? d.exp.entries.length : 0)+' Ausgaben'+(d.exported ? ' vom '+new Date(d.exported).toLocaleDateString('de-DE') : '')+' laden? Die Daten auf diesem Gerät werden dabei ersetzt.';
         $('importConfirm').hidden = false;
       } catch(err){ toast('Diese Datei ist keine Ruti-Sicherung.'); }
     };
@@ -667,8 +847,9 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
     state.routines = pendingImport.routines.filter(r => r && r.id && r.name && r.start);
     state.months = pendingImport.months || {};
     state.smoke = cleanSmoke(pendingImport.smoke);
+    state.exp = cleanExp(pendingImport.exp);
     pendingImport = null; $('importConfirm').hidden = true;
-    resetForm(); persist(); render(); initSmokeForms(); renderSmoke(); toast('Sicherung geladen');
+    resetForm(); persist(); render(); initSmokeForms(); renderSmoke(); initExpForms(); renderExp(); toast('Sicherung geladen');
   });
   $('importNo').addEventListener('click', () => { pendingImport = null; $('importConfirm').hidden = true; });
   async function flush(mk){
@@ -1041,6 +1222,370 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
   }
   setInterval(() => { if (!$('tab-rauchen').hidden && !document.hidden) renderSmoke(); }, 15000);
 
+  /* ---------- Ausgaben ---------- */
+  const ICON_EDIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>';
+  const SMOKE_CAT = { id:'rauchen', name:'Rauchen', slot:6, auto:true };
+  const USER_SLOTS = [0,1,2,3,4,5,7];
+  const NONE_CAT = { id:'', name:'Ohne Kategorie', slot:null };
+  const catColor = c => c && c.slot !== null && c.slot !== undefined ? 'var(--c'+c.slot+')' : 'var(--cnone)';
+  const newId = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+  const XS = { period:'day', sel: today(), edit:null, del:null, catEdit:null, catDel:null };
+
+  function cleanExp(x){
+    const out = { cats:[], entries:[], budget:null, budgetStart:null };
+    if (!x || typeof x !== 'object') return out;
+    if (Array.isArray(x.cats)) out.cats = x.cats.filter(c => c && c.id && c.name).map(c => ({ id:String(c.id), name:String(c.name), slot: typeof c.slot === 'number' ? c.slot : 0 }));
+    if (Array.isArray(x.entries)) out.entries = x.entries.filter(e => e && e.id && /^\d{4}-\d{2}-\d{2}$/.test(e.date) && typeof e.amount === 'number' && isFinite(e.amount))
+      .map(e => ({ id:String(e.id), date:e.date, amount:e.amount, catId: e.catId ? String(e.catId) : '', note: e.note ? String(e.note) : '', created: e.created || 0 }));
+    if (typeof x.budget === 'number' && isFinite(x.budget) && x.budget >= 0) out.budget = x.budget;
+    if (typeof x.budgetStart === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x.budgetStart)) out.budgetStart = x.budgetStart;
+    return out;
+  }
+  function catById(id){
+    if (id === 'rauchen') return SMOKE_CAT;
+    return state.exp.cats.find(c => c.id === id) || NONE_CAT;
+  }
+  function nextSlot(){
+    const used = state.exp.cats.map(c => c.slot);
+    const free = USER_SLOTS.find(s => !used.includes(s));
+    return free !== undefined ? free : USER_SLOTS[state.exp.cats.length % USER_SLOTS.length];
+  }
+  // Alle Posten: eigene Ausgaben + Rauchen je Tag
+  function expItems(){
+    const items = state.exp.entries.map(e => Object.assign({}, e));
+    const byDay = {};
+    state.smoke.entries.forEach(x => {
+      if (x.p === null) return;
+      const d = dayOf(x.t);
+      (byDay[d] = byDay[d] || { n:0, sum:0 }); byDay[d].n++; byDay[d].sum += x.p;
+    });
+    Object.keys(byDay).forEach(d => items.push({ id:'smoke-'+d, date:d, amount: Math.round(byDay[d].sum*100)/100, catId:'rauchen', note: byDay[d].n+(byDay[d].n === 1 ? ' Zigarette' : ' Zigaretten'), auto:true }));
+    return items;
+  }
+  function weekStart(d){ const dt = parse(d); const dow = (dt.getDay()+6) % 7; return addDays(d, -dow); }
+  function isoWeek(d){
+    const dt = parse(d); const th = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate() + 3 - ((dt.getDay()+6)%7));
+    const jan4 = new Date(th.getFullYear(), 0, 4);
+    return 1 + Math.round(((th - jan4) / 86400000 - 3 + ((jan4.getDay()+6)%7)) / 7);
+  }
+  function firstDate(items){
+    let f = today();
+    items.forEach(i => { if (i.date < f) f = i.date; });
+    if (state.exp.budgetStart && state.exp.budgetStart < f) f = state.exp.budgetStart;
+    return f;
+  }
+  function periodRange(p, sel, items){
+    if (p === 'day') return [sel, sel];
+    if (p === 'week'){ const s = weekStart(sel); return [s, addDays(s,6)]; }
+    if (p === 'month'){ const dt = parse(sel); const s = ymd(new Date(dt.getFullYear(), dt.getMonth(), 1)); const e = ymd(new Date(dt.getFullYear(), dt.getMonth()+1, 0)); return [s, e]; }
+    return [firstDate(items), today()];
+  }
+  const fmtD = d => parse(d).toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' });
+  function periodLabel(p, r){
+    const t = today();
+    if (p === 'day') return r[0] === t ? 'Heute' : r[0] === addDays(t,-1) ? 'Gestern' : fmtShort(r[0]);
+    if (p === 'week') return 'KW '+isoWeek(r[0])+' · '+fmtD(r[0])+'–'+fmtD(r[1]);
+    if (p === 'month') return parse(r[0]).toLocaleDateString('de-DE', { month:'long', year:'numeric' });
+    return 'seit '+parse(r[0]).toLocaleDateString('de-DE');
+  }
+  const P_NAME = { day:'Tag', week:'Woche', month:'Monat', all:'Gesamt' };
+  function daysBetween(a, b){ if (a > b) return 0; return Math.round((parse(b) - parse(a)) / 86400000) + 1; }
+  function periodStats(p, sel, items){
+    const r = periodRange(p, sel, items);
+    const inR = items.filter(i => i.date >= r[0] && i.date <= r[1]);
+    const spent = Math.round(inR.reduce((a,i) => a + i.amount, 0) * 100) / 100;
+    let budget = null, days = 0, fullBudget = null;
+    const B = state.exp.budget;
+    if (B !== null){
+      const from = state.exp.budgetStart && state.exp.budgetStart > r[0] ? state.exp.budgetStart : r[0];
+      const to = r[1] < today() ? r[1] : today();
+      days = daysBetween(from, to);
+      budget = Math.round(days * B * 100) / 100;
+      fullBudget = Math.round(daysBetween(from, r[1]) * B * 100) / 100;
+    }
+    return { r, inR, spent, budget, days, fullBudget };
+  }
+  function diffText(st){
+    if (st.budget === null) return { cls:'', txt:'–' };
+    if (st.days === 0) return { cls:'', txt:'noch nicht aktiv' };
+    const d = Math.round((st.budget - st.spent) * 100) / 100;
+    return d >= 0 ? { cls:'under', txt:'▼ '+eur(d)+' unter' } : { cls:'over', txt:'▲ '+eur(-d)+' über' };
+  }
+
+  function renderExp(){
+    const items = expItems();
+    const P = XS.period;
+    if (XS.sel > today()) XS.sel = today();
+    document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === P ? 'true' : 'false'));
+    const st = periodStats(P, XS.sel, items);
+    const label = periodLabel(P, st.r);
+    $('expLabel').textContent = label;
+    $('expNav').style.visibility = P === 'all' ? 'hidden' : 'visible';
+    $('expNext').disabled = st.r[1] >= today();
+    $('expToday').hidden = P === 'all' || (today() >= st.r[0] && today() <= st.r[1]);
+
+    // Budget-Karte
+    const card = $('budgetCard');
+    $('bcLbl').textContent = 'Ausgaben · '+P_NAME[P]+' · '+label;
+    $('bcSpent').textContent = eur(st.spent);
+    const dt = diffText(st);
+    if (st.budget === null){
+      card.dataset.s = 'none'; $('bcDiff').textContent = 'kein Budget';
+      $('bcSub').textContent = 'Lege ein Tagesbudget fest, um zu sehen, ob du darunter oder darüber liegst.';
+    } else if (st.days === 0){
+      card.dataset.s = 'none'; $('bcDiff').textContent = 'Budget noch nicht aktiv';
+      $('bcSub').textContent = 'Das Budget gilt ab '+parse(state.exp.budgetStart).toLocaleDateString('de-DE')+'.';
+    } else {
+      card.dataset.s = dt.cls; $('bcDiff').textContent = dt.txt+' Budget';
+      $('bcFill').style.width = Math.min(100, st.budget ? st.spent / st.budget * 100 : 100)+'%';
+      let sub = 'Budget bis heute: '+eur(st.budget)+' ('+st.days+(st.days === 1 ? ' Tag' : ' Tage')+' × '+eur(state.exp.budget)+')';
+      if (st.fullBudget !== null && st.fullBudget !== st.budget) sub += ' · ganzer Zeitraum: '+eur(st.fullBudget);
+      $('bcSub').textContent = sub;
+    }
+
+    // Übersicht alle Zeiträume
+    const tb = document.querySelector('#expOverview tbody'); tb.innerHTML = '';
+    ['day','week','month','all'].forEach(pp => {
+      const s = periodStats(pp, XS.sel, items);
+      const tr = document.createElement('tr'); if (pp === P) tr.className = 'sel';
+      const d = diffText(s);
+      const c1 = document.createElement('td'); c1.textContent = P_NAME[pp];
+      const sm = document.createElement('small'); sm.textContent = periodLabel(pp, s.r); c1.appendChild(sm);
+      const c2 = document.createElement('td'); c2.className = 'num'; c2.textContent = eur(s.spent);
+      const c3 = document.createElement('td'); c3.className = 'num'; c3.textContent = s.budget === null ? '–' : eur(s.budget);
+      const c4 = document.createElement('td'); c4.className = 'num '+d.cls; c4.textContent = d.txt;
+      tr.append(c1, c2, c3, c4);
+      tr.addEventListener('click', () => { XS.period = pp; renderExp(); });
+      tb.appendChild(tr);
+    });
+
+    // Kategorien
+    $('catLbl').textContent = 'Nach Kategorie · '+P_NAME[P]+' · '+label;
+    const sums = {};
+    st.inR.forEach(i => { sums[i.catId] = (sums[i.catId] || 0) + i.amount; });
+    const cats = Object.keys(sums).map(id => ({ cat: catById(id), sum: sums[id], n: st.inR.filter(i => i.catId === id).length }));
+    const stack = $('catStack'); stack.innerHTML = '';
+    const rows = $('catRows'); rows.innerHTML = '';
+    if (!cats.length || st.spent <= 0){
+      rows.innerHTML = '<p class="emptylog">Keine Ausgaben in diesem Zeitraum.</p>';
+      stack.hidden = true;
+    } else {
+      stack.hidden = false;
+      const bySlot = cats.slice().sort((a,b) => (a.cat.slot === null ? 99 : a.cat.slot) - (b.cat.slot === null ? 99 : b.cat.slot));
+      bySlot.forEach(c => { const i = document.createElement('i'); i.style.width = (c.sum/st.spent*100)+'%'; i.style.background = catColor(c.cat); i.title = c.cat.name+': '+eur(c.sum); stack.appendChild(i); });
+      const max = Math.max(...cats.map(c => c.sum));
+      cats.sort((a,b) => b.sum - a.sum).forEach(c => {
+        const row = document.createElement('div'); row.className = 'catrow';
+        row.title = c.cat.name+': '+eur(c.sum)+' · '+c.n+(c.n === 1 ? ' Eintrag' : ' Einträge');
+        const nm = document.createElement('div'); nm.className = 'catname';
+        const dot = document.createElement('span'); dot.className = 'dot'; dot.style.background = catColor(c.cat);
+        const tx = document.createElement('span'); tx.textContent = c.cat.name;
+        nm.append(dot, tx);
+        const bar = document.createElement('div'); bar.className = 'cbar';
+        const bi = document.createElement('i'); bi.style.width = (c.sum/max*100)+'%'; bi.style.background = catColor(c.cat); bar.appendChild(bi);
+        const e1 = document.createElement('div'); e1.className = 'eur'; e1.textContent = eur(c.sum);
+        const e2 = document.createElement('div'); e2.className = 'pct'; e2.textContent = (c.sum/st.spent*100).toLocaleString('de-DE', { maximumFractionDigits: 1 })+' %';
+        row.append(nm, bar, e1, e2); rows.appendChild(row);
+      });
+    }
+
+    // Einträge
+    $('listLbl').textContent = 'Einträge · '+P_NAME[P]+' · '+label;
+    const list = $('expList'); list.innerHTML = ''; list.className = 'explist';
+    const sorted = st.inR.slice().sort((a,b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.created||0) - (a.created||0));
+    if (!sorted.length){ list.innerHTML = '<p class="emptylog">Noch keine Einträge in diesem Zeitraum.</p>'; }
+    const shown = sorted.slice(0, 80);
+    let cur = null;
+    shown.forEach(i => {
+      if (i.date !== cur){
+        cur = i.date;
+        const h = document.createElement('div'); h.className = 'dayh';
+        const a = document.createElement('span'); a.textContent = dayLabel(i.date);
+        const b = document.createElement('span'); b.textContent = eur(st.inR.filter(x => x.date === i.date).reduce((s,x) => s + x.amount, 0));
+        h.append(a, b); list.appendChild(h);
+      }
+      const c = catById(i.catId);
+      const row = document.createElement('div'); row.className = 'exprow'+(XS.edit === i.id ? ' editing-row' : '');
+      const w = document.createElement('div'); w.className = 'what';
+      const l1 = document.createElement('div');
+      const dot = document.createElement('span'); dot.className = 'dot'; dot.style.background = catColor(c);
+      const cn = document.createElement('span'); cn.textContent = c.name;
+      l1.append(dot, cn);
+      if (i.auto){ const au = document.createElement('span'); au.className = 'auto'; au.textContent = 'automatisch'; l1.appendChild(au); }
+      w.appendChild(l1);
+      if (i.note){ const l2 = document.createElement('div'); l2.textContent = i.note; w.appendChild(l2); }
+      const amt = document.createElement('span'); amt.className = 'amt'; amt.textContent = eur(i.amount);
+      row.append(w, amt);
+      if (!i.auto){
+        const ed = document.createElement('button'); ed.type = 'button'; ed.className = 'iconbtn'; ed.innerHTML = ICON_EDIT;
+        ed.title = 'Bearbeiten'; ed.setAttribute('aria-label', 'Ausgabe '+eur(i.amount)+' bearbeiten');
+        ed.addEventListener('click', () => startExpEdit(i.id));
+        const de = document.createElement('button'); de.type = 'button'; de.className = 'iconbtn del'; de.innerHTML = ICON_TRASH;
+        de.title = 'Löschen'; de.setAttribute('aria-label', 'Ausgabe '+eur(i.amount)+' löschen');
+        de.addEventListener('click', () => { XS.del = XS.del === i.id ? null : i.id; renderExp(); });
+        row.append(ed, de);
+        if (XS.del === i.id){
+          const cf = document.createElement('div'); cf.className = 'confirm';
+          const p = document.createElement('div'); p.textContent = 'Ausgabe über '+eur(i.amount)+' löschen?';
+          const rr = document.createElement('div'); rr.className = 'row';
+          const y = document.createElement('button'); y.type = 'button'; y.className = 'btn danger'; y.textContent = 'Löschen';
+          y.addEventListener('click', () => { state.exp.entries = state.exp.entries.filter(x => x.id !== i.id); XS.del = null; if (XS.edit === i.id) resetExpForm(); persist(); renderExp(); toast('Ausgabe gelöscht'); });
+          const n = document.createElement('button'); n.type = 'button'; n.className = 'btn ghost'; n.textContent = 'Behalten';
+          n.addEventListener('click', () => { XS.del = null; renderExp(); });
+          rr.append(y, n); cf.append(p, rr); row.appendChild(cf);
+        }
+      } else {
+        const hint = document.createElement('span'); hint.className = 'hint'; hint.textContent = 'im Tab Rauchen ändern'; row.appendChild(hint);
+      }
+      list.appendChild(row);
+    });
+    if (sorted.length > shown.length){ const p = document.createElement('p'); p.className = 'note'; p.textContent = 'Die neuesten 80 von '+sorted.length+' Einträgen. Wähle Tag, Woche oder Monat für ältere.'; list.appendChild(p); }
+
+    renderCatSelect();
+    renderCatManage();
+  }
+
+  function renderCatSelect(){
+    const sel = $('eCat'), keep = sel.value;
+    sel.innerHTML = '';
+    state.exp.cats.forEach(c => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.name; sel.appendChild(o); });
+    const o = document.createElement('option'); o.value = ''; o.textContent = 'Ohne Kategorie'; sel.appendChild(o);
+    if ([...sel.options].some(x => x.value === keep)) sel.value = keep;
+  }
+  function renderCatManage(){
+    const box = $('catManage'); box.innerHTML = '';
+    const count = id => state.exp.entries.filter(e => e.catId === id).length;
+    [SMOKE_CAT].concat(state.exp.cats).forEach(c => {
+      const r = document.createElement('div'); r.className = 'catm';
+      if (XS.catEdit === c.id){
+        const inp = document.createElement('input'); inp.type = 'text'; inp.id = 'catEditInput'; inp.value = c.name; inp.maxLength = 40;
+        const sv = document.createElement('button'); sv.type = 'button'; sv.className = 'btn'; sv.textContent = 'Speichern';
+        const save = () => {
+          const v = inp.value.trim(); if (!v) return;
+          if (v.toLowerCase() === 'rauchen' || state.exp.cats.some(x => x.id !== c.id && x.name.toLowerCase() === v.toLowerCase())){ toast('Diese Kategorie gibt es schon.'); return; }
+          c.name = v; XS.catEdit = null; persist(); renderExp(); toast('Kategorie umbenannt');
+        };
+        sv.addEventListener('click', save);
+        inp.addEventListener('keydown', ev => { if (ev.key === 'Enter'){ ev.preventDefault(); save(); } if (ev.key === 'Escape'){ XS.catEdit = null; renderCatManage(); } });
+        const ab = document.createElement('button'); ab.type = 'button'; ab.className = 'btn ghost'; ab.textContent = 'Abbrechen';
+        ab.addEventListener('click', () => { XS.catEdit = null; renderCatManage(); });
+        r.append(inp, sv, ab); box.appendChild(r); setTimeout(() => inp.focus(), 0); return;
+      }
+      const nm = document.createElement('div'); nm.className = 'nm';
+      const dot = document.createElement('span'); dot.className = 'dot'; dot.style.background = catColor(c);
+      const tx = document.createElement('span'); tx.textContent = c.name;
+      const n = count(c.id);
+      const sm = document.createElement('small'); sm.textContent = c.auto ? 'automatisch aus Rauchen' : n+(n === 1 ? ' Eintrag' : ' Einträge');
+      nm.append(dot, tx, sm); r.appendChild(nm);
+      if (!c.auto){
+        const ed = document.createElement('button'); ed.type = 'button'; ed.className = 'small'; ed.textContent = 'Umbenennen';
+        ed.addEventListener('click', () => { XS.catEdit = c.id; XS.catDel = null; renderCatManage(); });
+        const de = document.createElement('button'); de.type = 'button'; de.className = 'small del'; de.textContent = 'Löschen';
+        de.addEventListener('click', () => { XS.catDel = XS.catDel === c.id ? null : c.id; renderCatManage(); });
+        r.append(ed, de);
+        if (XS.catDel === c.id){
+          const cf = document.createElement('div'); cf.className = 'confirm';
+          const p = document.createElement('div'); p.textContent = '„'+c.name+'“ löschen?'+(n ? ' '+n+(n === 1 ? ' Ausgabe wird' : ' Ausgaben werden')+' „Ohne Kategorie“ zugeordnet.' : '');
+          const rr = document.createElement('div'); rr.className = 'row';
+          const y = document.createElement('button'); y.type = 'button'; y.className = 'btn danger'; y.textContent = 'Kategorie löschen';
+          y.addEventListener('click', () => { state.exp.cats = state.exp.cats.filter(x => x.id !== c.id); state.exp.entries.forEach(e => { if (e.catId === c.id) e.catId = ''; }); XS.catDel = null; persist(); renderExp(); toast('Kategorie gelöscht'); });
+          const no = document.createElement('button'); no.type = 'button'; no.className = 'btn ghost'; no.textContent = 'Behalten';
+          no.addEventListener('click', () => { XS.catDel = null; renderCatManage(); });
+          rr.append(y, no); cf.append(p, rr); r.appendChild(cf);
+        }
+      }
+      box.appendChild(r);
+    });
+    $('catSuggest').hidden = state.exp.cats.length > 0;
+  }
+
+  function addCategory(name){
+    name = name.trim(); if (!name) return null;
+    if (name.toLowerCase() === 'rauchen' || state.exp.cats.some(c => c.name.toLowerCase() === name.toLowerCase())){ toast('„'+name+'“ gibt es schon.'); return null; }
+    const c = { id: newId('c'), name, slot: nextSlot() };
+    state.exp.cats.push(c); return c;
+  }
+  $('catForm').addEventListener('submit', ev => {
+    ev.preventDefault();
+    const c = addCategory($('cName').value);
+    if (!c) return;
+    $('cName').value = ''; persist(); renderExp(); $('eCat').value = c.id; toast('Kategorie „'+c.name+'“ angelegt');
+  });
+  $('catSuggest').addEventListener('click', () => {
+    ['Lebensmittel','Essen & Trinken','Mobilität','Haushalt','Freizeit'].forEach(n => addCategory(n));
+    persist(); renderExp(); toast('Fünf Kategorien angelegt – umbenennen oder löschen jederzeit möglich');
+  });
+
+  function resetExpForm(){
+    XS.edit = null;
+    $('eAmount').value = ''; $('eNote').value = '';
+    $('eDate').value = XS.period === 'day' ? XS.sel : today();
+    $('eDate').max = today();
+    $('eSubmit').textContent = 'Ausgabe speichern'; $('expFormTitle').textContent = 'Ausgabe erfassen';
+    $('eCancel').hidden = true; $('expEditHint').hidden = true;
+  }
+  function startExpEdit(id){
+    const e = state.exp.entries.find(x => x.id === id); if (!e) return;
+    XS.edit = id; XS.del = null;
+    $('eAmount').value = e.amount.toFixed(2).replace('.', ',');
+    $('eDate').value = e.date; $('eNote').value = e.note || '';
+    renderCatSelect(); $('eCat').value = e.catId || '';
+    $('eSubmit').textContent = 'Änderungen speichern'; $('expFormTitle').textContent = 'Ausgabe bearbeiten';
+    $('eCancel').hidden = false; $('expEditHint').hidden = false;
+    $('expEditHint').textContent = 'Du bearbeitest: '+eur(e.amount)+' vom '+parse(e.date).toLocaleDateString('de-DE');
+    renderExp();
+    $('expForm').scrollIntoView({ behavior:'smooth', block:'center' });
+    $('eAmount').focus({ preventScroll:true });
+  }
+  $('eCancel').addEventListener('click', () => { resetExpForm(); renderExp(); });
+  $('expForm').addEventListener('submit', ev => {
+    ev.preventDefault();
+    const a = parsePrice($('eAmount').value);
+    if (a === null || Number.isNaN(a) || a <= 0){ toast('Bitte einen Betrag wie 12,90 eingeben.'); $('eAmount').focus(); return; }
+    const date = $('eDate').value || today();
+    if (date > today()){ toast('Das Datum liegt in der Zukunft.'); return; }
+    const data = { date, amount: a, catId: $('eCat').value, note: $('eNote').value.trim() };
+    if (XS.edit){
+      const e = state.exp.entries.find(x => x.id === XS.edit);
+      if (e) Object.assign(e, data);
+      toast('Ausgabe geändert');
+    } else {
+      state.exp.entries.push(Object.assign({ id: newId('e'), created: Date.now() }, data));
+      toast(eur(a)+' erfasst · '+catById(data.catId).name);
+    }
+    const keepCat = data.catId;
+    XS.sel = date;
+    persist(); resetExpForm(); renderExp(); $('eCat').value = keepCat;
+  });
+  $('budgetForm').addEventListener('submit', ev => {
+    ev.preventDefault();
+    const b = parsePrice($('bAmount').value);
+    if (Number.isNaN(b)){ toast('Bitte einen Betrag wie 25,00 eingeben.'); return; }
+    state.exp.budget = b;
+    state.exp.budgetStart = b === null ? null : ($('bStart').value || state.exp.budgetStart || today());
+    persist(); initExpForms(); renderExp();
+    toast(b === null ? 'Budget entfernt' : 'Tagesbudget '+eur(b)+' ab '+parse(state.exp.budgetStart).toLocaleDateString('de-DE'));
+  });
+  function initExpForms(){
+    $('bAmount').value = state.exp.budget === null ? '' : state.exp.budget.toFixed(2).replace('.', ',');
+    $('bStart').value = state.exp.budgetStart || today();
+    resetExpForm();
+  }
+  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => { XS.period = b.dataset.p; XS.del = null; renderExp(); }));
+  function stepPeriod(dir){
+    const P = XS.period;
+    if (P === 'day') XS.sel = addDays(XS.sel, dir);
+    else if (P === 'week') XS.sel = addDays(weekStart(XS.sel), dir*7);
+    else if (P === 'month'){ const dt = parse(XS.sel); XS.sel = ymd(new Date(dt.getFullYear(), dt.getMonth()+dir, 1)); }
+    if (XS.sel > today()) XS.sel = today();
+    XS.del = null;
+    if (!XS.edit && P === 'day') $('eDate').value = XS.sel;
+    renderExp();
+  }
+  $('expPrev').addEventListener('click', () => stepPeriod(-1));
+  $('expNext').addEventListener('click', () => stepPeriod(1));
+  $('expToday').addEventListener('click', () => { XS.sel = today(); if (!XS.edit) $('eDate').value = today(); renderExp(); });
+
   /* ---------- Navigation ---------- */
   $('prevDay').addEventListener('click', () => { state.sel = addDays(state.sel,-1); render(); });
   $('nextDay').addEventListener('click', () => { if (state.sel < today()){ state.sel = addDays(state.sel,1); render(); } });
@@ -1055,6 +1600,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
     });
     try { localStorage.setItem('ruti-tab', name); } catch(e){}
     if (name === 'rauchen'){ $('fWhen').max = localInputValue(new Date()); renderSmoke(); }
+    if (name === 'ausgaben'){ $('eDate').max = today(); renderExp(); }
   }
   document.querySelectorAll('.tabbar button').forEach(b => b.addEventListener('click', () => { showTab(b.dataset.tab); window.scrollTo(0,0); }));
   let startTab = (location.hash || '').slice(1);
@@ -1073,7 +1619,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent)}
   (async () => {
     let db = null;
     try { if (window.claude && window.claude.use) db = await window.claude.use('db'); } catch(e){ db = null; }
-    if (!db){ loadLocal(); state.mode = 'local'; initSmokeForms(); render(); renderSmoke(); return; }
+    if (!db){ loadLocal(); state.mode = 'local'; initSmokeForms(); initExpForms(); render(); renderSmoke(); renderExp(); return; }
     state.db = db;
     let gotR = false, gotC = false;
     const ready = () => { if (gotR && gotC && state.mode !== 'live'){ state.mode = 'live'; } render(); };
