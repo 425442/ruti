@@ -25,7 +25,9 @@ Persönliche App zum Festhalten und Bewerten täglicher Routinen – nutzbar am 
 - Kategorien selbst anlegen, umbenennen und löschen (Ausgaben einer gelöschten Kategorie landen in „Ohne Kategorie“).
 - Kategorie **Rauchen** wird automatisch aus dem Tab Rauchen befüllt (Anzahl × Preis je Tag).
 - Übersicht in € und % nach Kategorie für **Tag, Woche (KW), Monat und gesamt**, mit Blättern in die Vergangenheit.
-- **Tagesbudget** mit Startdatum. Budget-Vergleich (unter/über) für Tag, Woche, Monat und gesamt – gezählt werden die Tage bis heute.
+- **Tagesbudget** mit Startdatum und **Übertrag**: Nicht genutztes Budget steht an den folgenden Tagen zusätzlich zur Verfügung, Überziehungen werden abgezogen.
+- „Heute noch verfügbar“ = Tagesbudget + Übertrag − heutige Ausgaben.
+- Vergleich Ausgaben / Verfügbar / Rest für Tag, Woche, Monat und gesamt – gezählt werden die Tage bis heute.
 
 ## Rauchen
 

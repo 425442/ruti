@@ -299,6 +299,19 @@ select:focus{outline:none;border-color:var(--accent)}
 .exprow .iconbtn{width:34px;height:34px}
 .exprow .iconbtn svg{width:16px;height:16px}
 .exprow .iconbtn.del:hover{color:var(--miss);border-color:var(--miss)}
+.carry-card{background:var(--surface);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px;margin-top:12px;display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);gap:8px 28px;align-items:center}
+.carry-card .lbl{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.cc-val{font-family:var(--display);font-weight:700;font-size:clamp(34px,8vw,48px);letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1;color:var(--done)}
+.carry-card[data-s="over"] .cc-val{color:var(--miss)}
+.cc-parts{display:flex;flex-direction:column;gap:3px;font-size:14px;font-variant-numeric:tabular-nums}
+.cc-line{display:flex;justify-content:space-between;gap:12px;color:var(--muted)}
+.cc-line span:last-child{color:var(--ink);font-weight:600}
+.cc-line.plus span:last-child{color:var(--done)}
+.cc-line.minus span:last-child{color:var(--miss)}
+.cc-note{margin:6px 0 0;font-size:13px;color:var(--ink);background:var(--done-soft);border-radius:8px;padding:7px 10px}
+.carry-card[data-s="over"] .cc-note{background:var(--miss-soft)}
+@media (max-width:620px){.carry-card{grid-template-columns:minmax(0,1fr)}}
+.bc-sub div + div{margin-top:2px}
 /* Placeholder tabs */
 .soon{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:28px 22px;margin-top:14px;max-width:620px}
 .soon h2{font-size:24px;margin-bottom:8px}
@@ -409,6 +422,14 @@ select:focus{outline:none;border-color:var(--accent)}
       </div>
     </div>
 
+    <div class="carry-card" id="carryCard" hidden>
+      <div class="cc-main">
+        <div class="lbl">Heute noch verfügbar</div>
+        <div class="cc-val" id="ccVal">0,00 €</div>
+      </div>
+      <div class="cc-parts" id="ccParts"></div>
+    </div>
+
     <div class="smoke-grid exp-grid">
       <div class="smoke-main">
         <div class="stat budget-card" id="budgetCard" data-s="none">
@@ -425,11 +446,11 @@ select:focus{outline:none;border-color:var(--accent)}
           <div class="lbl">Budget-Vergleich · alle Zeiträume</div>
           <div class="tablewrap">
             <table class="ovt" id="expOverview">
-              <thead><tr><th>Zeitraum</th><th class="num">Ausgaben</th><th class="num">Budget</th><th class="num">Differenz</th></tr></thead>
+              <thead><tr><th>Zeitraum</th><th class="num">Ausgaben</th><th class="num">Verfügbar</th><th class="num">Rest</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
-          <p class="note">Das Budget zählt nur die Tage bis heute (ab „gilt ab“). Tipp auf eine Zeile zeigt ihre Kategorien.</p>
+          <p class="note">Verfügbar = Tagesbudget für die Tage bis heute plus Übertrag: Was an früheren Tagen übrig blieb, steht dir weiter zur Verfügung – Überziehungen werden abgezogen. Tipp auf eine Zeile zeigt ihre Kategorien.</p>
         </div>
 
         <div class="stat">
@@ -481,6 +502,7 @@ select:focus{outline:none;border-color:var(--accent)}
               <input type="date" id="bStart">
             </label>
           </div>
+          <div class="hint">Nicht genutztes Budget wird automatisch auf die folgenden Tage übertragen und steht dir später zur Verfügung. Überziehungen werden abgezogen.</div>
           <div class="row"><button class="btn" type="submit">Budget speichern</button></div>
         </form>
 
@@ -1290,13 +1312,29 @@ select:focus{outline:none;border-color:var(--accent)}
       budget = Math.round(days * B * 100) / 100;
       fullBudget = Math.round(daysBetween(from, r[1]) * B * 100) / 100;
     }
-    return { r, inR, spent, budget, days, fullBudget };
+    // Übertrag: nicht genutztes (oder überzogenes) Budget aller Tage vor dem Zeitraum
+    let carry = 0;
+    if (B !== null && state.exp.budgetStart && state.exp.budgetStart < r[0]) carry = carryBefore(r[0], items);
+    const available = budget === null ? null : Math.round((budget + carry) * 100) / 100;
+    const rest = available === null ? null : Math.round((available - spent) * 100) / 100;
+    return { r, inR, spent, budget, days, fullBudget, carry, available, rest };
   }
+  function spentByDay(items){ const m = {}; items.forEach(i => { m[i.date] = (m[i.date] || 0) + i.amount; }); return m; }
+  function carryBefore(date, items){
+    const B = state.exp.budget, start = state.exp.budgetStart;
+    if (B === null || !start || start >= date) return 0;
+    const m = spentByDay(items);
+    const end = addDays(date < today() ? date : today(), -1);
+    let sum = 0;
+    for (let d = start; d <= end; d = addDays(d,1)) sum += B - (m[d] || 0);
+    // Zukünftige Tage im Blick zurück (Zeitraum beginnt nach heute) gibt es nicht
+    return Math.round(sum * 100) / 100;
+  }
+  const signedEur = v => (v > 0 ? '+' : v < 0 ? '−' : '±')+eur(Math.abs(v));
   function diffText(st){
     if (st.budget === null) return { cls:'', txt:'–' };
     if (st.days === 0) return { cls:'', txt:'noch nicht aktiv' };
-    const d = Math.round((st.budget - st.spent) * 100) / 100;
-    return d >= 0 ? { cls:'under', txt:'▼ '+eur(d)+' unter' } : { cls:'over', txt:'▲ '+eur(-d)+' über' };
+    return st.rest >= 0 ? { cls:'under', txt:eur(st.rest)+' frei' } : { cls:'over', txt:'▲ '+eur(-st.rest)+' überzogen' };
   }
 
   function renderExp(){
@@ -1323,12 +1361,21 @@ select:focus{outline:none;border-color:var(--accent)}
       card.dataset.s = 'none'; $('bcDiff').textContent = 'Budget noch nicht aktiv';
       $('bcSub').textContent = 'Das Budget gilt ab '+parse(state.exp.budgetStart).toLocaleDateString('de-DE')+'.';
     } else {
-      card.dataset.s = dt.cls; $('bcDiff').textContent = dt.txt+' Budget';
-      $('bcFill').style.width = Math.min(100, st.budget ? st.spent / st.budget * 100 : 100)+'%';
-      let sub = 'Budget bis heute: '+eur(st.budget)+' ('+st.days+(st.days === 1 ? ' Tag' : ' Tage')+' × '+eur(state.exp.budget)+')';
-      if (st.fullBudget !== null && st.fullBudget !== st.budget) sub += ' · ganzer Zeitraum: '+eur(st.fullBudget);
-      $('bcSub').textContent = sub;
+      card.dataset.s = dt.cls;
+      $('bcDiff').textContent = st.rest >= 0 ? 'noch '+eur(st.rest)+' verfügbar' : eur(-st.rest)+' überzogen';
+      $('bcFill').style.width = Math.min(100, st.available > 0 ? st.spent / st.available * 100 : 100)+'%';
+      const sub = $('bcSub'); sub.innerHTML = '';
+      const l1 = document.createElement('div');
+      l1.textContent = 'Verfügbar: '+eur(st.budget)+' Budget ('+st.days+(st.days === 1 ? ' Tag' : ' Tage')+' × '+eur(state.exp.budget)+')'
+        +(st.carry !== 0 ? ' '+(st.carry > 0 ? '+ ' : '− ')+eur(Math.abs(st.carry))+' Übertrag aus den Vortagen' : '')
+        +' = '+eur(st.available);
+      sub.appendChild(l1);
+      if (st.fullBudget !== null && st.fullBudget !== st.budget){
+        const l2 = document.createElement('div'); l2.textContent = 'Budget für den ganzen Zeitraum: '+eur(st.fullBudget)+(st.carry ? ' (ohne Übertrag)' : '');
+        sub.appendChild(l2);
+      }
     }
+    renderCarryCard(items);
 
     // Übersicht alle Zeiträume
     const tb = document.querySelector('#expOverview tbody'); tb.innerHTML = '';
@@ -1339,7 +1386,8 @@ select:focus{outline:none;border-color:var(--accent)}
       const c1 = document.createElement('td'); c1.textContent = P_NAME[pp];
       const sm = document.createElement('small'); sm.textContent = periodLabel(pp, s.r); c1.appendChild(sm);
       const c2 = document.createElement('td'); c2.className = 'num'; c2.textContent = eur(s.spent);
-      const c3 = document.createElement('td'); c3.className = 'num'; c3.textContent = s.budget === null ? '–' : eur(s.budget);
+      const c3 = document.createElement('td'); c3.className = 'num'; c3.textContent = s.available === null ? '–' : eur(s.available);
+      if (s.carry){ const cs = document.createElement('small'); cs.textContent = 'inkl. '+signedEur(s.carry)+' Übertrag'; c3.appendChild(cs); }
       const c4 = document.createElement('td'); c4.className = 'num '+d.cls; c4.textContent = d.txt;
       tr.append(c1, c2, c3, c4);
       tr.addEventListener('click', () => { XS.period = pp; renderExp(); });
@@ -1430,6 +1478,33 @@ select:focus{outline:none;border-color:var(--accent)}
 
     renderCatSelect();
     renderCatManage();
+  }
+
+  function renderCarryCard(items){
+    const card = $('carryCard');
+    const B = state.exp.budget, start = state.exp.budgetStart, t = today();
+    if (B === null || !start || start > t){ card.hidden = true; return; }
+    card.hidden = false;
+    const carry = carryBefore(t, items);
+    const spentToday = Math.round((spentByDay(items)[t] || 0) * 100) / 100;
+    const avail = Math.round((B + carry - spentToday) * 100) / 100;
+    card.dataset.s = avail >= 0 ? 'ok' : 'over';
+    $('ccVal').textContent = avail >= 0 ? eur(avail) : '−'+eur(-avail);
+    const parts = $('ccParts'); parts.innerHTML = '';
+    const line = (label, val, cls) => {
+      const r = document.createElement('div'); r.className = 'cc-line'+(cls ? ' '+cls : '');
+      const a = document.createElement('span'); a.textContent = label;
+      const b = document.createElement('span'); b.textContent = val;
+      r.append(a, b); parts.appendChild(r);
+    };
+    line('Tagesbudget heute', eur(B));
+    line(carry >= 0 ? 'Übertrag – nicht genutzt an Vortagen' : 'Übertrag – an Vortagen überzogen', signedEur(carry), carry > 0 ? 'plus' : carry < 0 ? 'minus' : '');
+    line('Heute ausgegeben', spentToday ? '−'+eur(spentToday) : eur(0));
+    const note = document.createElement('p'); note.className = 'cc-note';
+    note.textContent = avail >= 0
+      ? 'Was du heute nicht ausgibst, kommt morgen zu deinem Tagesbudget dazu.'
+      : 'Du hast mehr ausgegeben als verfügbar. Der Betrag wird von den nächsten Tagen abgezogen.';
+    parts.appendChild(note);
   }
 
   function renderCatSelect(){
