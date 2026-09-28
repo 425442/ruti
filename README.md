@@ -21,7 +21,9 @@ Persönliche App zum Festhalten und Bewerten täglicher Routinen – nutzbar am 
 
 ## Nutzung
 
-`app/index.html` im Browser öffnen – eine einzige Datei, funktioniert ohne Internet.
+**Online:** https://425442.github.io/ruti/ – am PC und am Handy im Browser öffnen.
+
+**Offline:** `app/index.html` im Browser öffnen – eine einzige Datei, funktioniert ohne Internet.
 
 Die Daten liegen im Browser des jeweiligen Geräts (localStorage). Mit **Sicherung speichern / Sicherung laden** (unter „Routinen verwalten“) überträgst du sie als JSON-Datei zwischen PC und Handy.
 
