@@ -18,6 +18,7 @@ Persönliche App zum Festhalten und Bewerten täglicher Routinen – nutzbar am 
 - **Wertigkeit mit Sternen:** 1 ★ = 10 Punkte, 2 ★ = 12,5, 3 ★ = 15, 4 ★ = 17,5, 5 ★ = 20 Punkte je erledigtem Tag. Sterne im Formular oder direkt auf der Karte antippen.
 - **Zuverlässigkeit** = erreichte ÷ mögliche Punkte, inklusive heute – also nach Sternen gewichtet. Offene Routinen zählen sofort als nicht erledigt (5 ★ erledigt + 1 ★ offen → 20 von 30 Punkten = 67 %).
 - Serie (Tage am Stück) und die letzten 14 Tage je Routine.
+- **Kompakte Tagesansicht:** jede Routine / jedes Ritual als eine Zeile – links ✗ (nicht erledigt), rechts ✓ (erledigt). Titel antippen klappt Details auf: Einzelschritte (ebenfalls mit ✗/✓), Sterne, Statistik, Bearbeiten/Löschen.
 - Reihenfolge per Drag and Drop: Karte ziehen, am Handy kurz gedrückt halten und dann ziehen.
 
 ## Ausgaben

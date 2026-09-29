@@ -362,6 +362,50 @@ select:focus{outline:none;border-color:var(--accent)}
 .check.ritual[data-s="part"] .ringmark{border-color:var(--done)}
 .check.ritual[data-s="done"] .mark{background:var(--done);border-color:var(--done);color:#fff}
 .dots span.p{background:color-mix(in srgb, var(--done) 45%, var(--empty))}
+/* Kompakte Routinen-Zeilen */
+.rstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-block:12px 8px}
+.rs{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);padding:9px 12px;display:flex;flex-direction:column;min-width:0}
+.rs b{font-family:var(--display);font-size:22px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums}
+.rs span{font-size:12px;color:var(--muted);font-weight:600}
+.rs small{font-size:11.5px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);padding:8px 12px;margin-bottom:14px}
+.hist summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);padding:2px 0}
+.hist[open] summary{margin-bottom:6px}
+.hist .strip{height:44px}
+.list{gap:6px}
+.rrow{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;cursor:grab}
+.rrow[data-s="done"]{background:var(--done-soft)}
+.rrow[data-s="miss"]{background:var(--miss-soft)}
+.rhead{display:flex;align-items:center;gap:6px;padding:5px}
+.rbtn{flex:none;width:42px;height:42px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;padding:0}
+.rbtn svg{width:18px;height:18px}
+.rbtn.no{color:var(--miss)}
+.rbtn.yes{color:var(--done)}
+.rbtn.no:hover{border-color:var(--miss)}
+.rbtn.yes:hover{border-color:var(--done)}
+.rbtn.no[aria-pressed="true"]{background:var(--miss);border-color:var(--miss);color:#fff}
+.rbtn.yes[aria-pressed="true"]{background:var(--done);border-color:var(--done);color:#fff}
+.rbtn.sm{width:32px;height:32px;border-radius:8px}
+.rbtn.sm svg{width:14px;height:14px}
+.rtitle{flex:1;min-width:0;display:flex;align-items:center;gap:8px;border:0;background:none;padding:6px 4px;text-align:left;cursor:pointer;color:var(--ink)}
+.rname{font-weight:700;font-size:15.5px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rprog{font-size:12.5px;font-weight:700;color:var(--muted);background:var(--surface-2);border-radius:999px;padding:2px 8px;font-variant-numeric:tabular-nums;flex:none}
+.rrow[data-s="part"] .rprog{color:var(--done)}
+.chev{width:18px;height:18px;color:var(--faint);flex:none;transition:transform .15s}
+.chev svg{width:18px;height:18px;display:block}
+.rrow.open .chev{transform:rotate(180deg)}
+.rbody{padding:4px 12px 12px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);background:var(--surface)}
+.srows{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}
+.srow{display:flex;align-items:center;gap:8px;border-radius:9px;padding:3px;background:var(--surface-2)}
+.srow[data-s="done"]{background:var(--done-soft)}
+.srow[data-s="miss"]{background:var(--miss-soft)}
+.sname{flex:1;min-width:0;font-size:14.5px;font-weight:600;overflow-wrap:anywhere}
+.rdesc{margin:0;font-size:13.5px;color:var(--muted)}
+.rline{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px}
+.rmeta{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:auto}
+.rfoot{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.rfoot .dots{margin:0;flex:1;gap:2px}
+.rfoot .dots span{width:9px;height:9px}
 /* Placeholder tabs */
 .soon{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:28px 22px;margin-top:14px;max-width:620px}
 .soon h2{font-size:24px;margin-bottom:8px}
@@ -395,16 +439,16 @@ select:focus{outline:none;border-color:var(--accent)}
 <main class="wrap">
   <section id="tab-routinen" role="tabpanel" aria-labelledby="t-routinen">
     <div id="banner"></div>
-    <div class="summary">
-      <div class="stat"><div class="lbl">Punkte gesamt</div><div class="val" id="sPoints">0</div><div class="sub" id="sPointsSub">10 Punkte je erledigter Routine</div></div>
-      <div class="stat"><div class="lbl">Zuverlässigkeit</div><div class="val" id="sPct">–</div><div class="sub" id="sPctSub">erreichte von möglichen Punkten</div></div>
-      <div class="stat"><div class="lbl" id="sDayLbl">Heute</div><div class="val" id="sDay">0 / 0</div><div class="sub" id="sDaySub">Routinen erledigt</div></div>
-      <div class="stat wide">
-        <div class="lbl">Letzte 30 Tage</div>
-        <div class="strip" id="strip" aria-label="Erledigungsquote der letzten 30 Tage"></div>
-        <div class="strip-axis"><span id="stripStart"></span><span>Tag antippen, um ihn nachzutragen</span><span>heute</span></div>
-      </div>
+    <div class="rstats">
+      <div class="rs"><b id="sDay">0 / 0</b><span id="sDayLbl">Heute</span><small id="sDaySub"></small></div>
+      <div class="rs"><b id="sPct">–</b><span>zuverlässig</span><small id="sPctSub"></small></div>
+      <div class="rs"><b id="sPoints">0</b><span>Punkte gesamt</span><small id="sPointsSub"></small></div>
     </div>
+    <details class="hist" id="histBox">
+      <summary>Verlauf der letzten 30 Tage</summary>
+      <div class="strip" id="strip" aria-label="Erledigungsquote der letzten 30 Tage"></div>
+      <div class="strip-axis"><span id="stripStart"></span><span>Tag antippen zum Nachtragen</span><span>heute</span></div>
+    </details>
 
     <div class="grid">
       <div>
@@ -418,7 +462,7 @@ select:focus{outline:none;border-color:var(--accent)}
           </div>
         </div>
         <ul class="list" id="checkList"></ul>
-        <p class="note">Die Zuverlässigkeit zeigt den aktuellen Stand, gewichtet nach Sternen: erreichte ÷ mögliche Punkte. Jede noch offene Routine – auch heute – zählt als nicht erledigt, bis du sie abhakst. Reihenfolge ändern: Karte ziehen – am Handy kurz gedrückt halten, dann ziehen.</p>
+        <p class="note">✗ nicht erledigt · ✓ erledigt · Titel antippen für Details und Sterne · Zum Umsortieren eine Zeile ziehen (am Handy kurz gedrückt halten).</p>
       </div>
 
       <aside class="panel" aria-labelledby="mTitle">
@@ -741,16 +785,16 @@ select:focus{outline:none;border-color:var(--accent)}
     const stats = {};
     state.routines.forEach(r => { const s = statsFor(r); stats[r.id] = s; done += s.done; counted += s.counted; points += s.points; possible += s.counted * pointsFor(r); });
     $('sPoints').textContent = fmtNum(points);
-    $('sPointsSub').textContent = fmtNum(done)+(done === 1 ? ' erledigte Aufgabe' : ' erledigte Aufgaben')+' · 10–20 Punkte je nach Sternen';
+    $('sPointsSub').textContent = fmtNum(done)+(done === 1 ? ' Aufgabe erledigt' : ' Aufgaben erledigt');
     // Gewichtet nach Sternen: erreichte Punkte ÷ mögliche Punkte
     $('sPct').textContent = possible ? Math.round(points/possible*100)+' %' : '–';
-    $('sPctSub').textContent = possible ? fmtNum(points)+' von '+fmtNum(possible)+' möglichen Punkten · nach Sternen gewichtet' : 'noch keine fälligen Aufgaben';
+    $('sPctSub').textContent = possible ? fmtNum(points)+' von '+fmtNum(possible)+' P. · nach Sternen' : 'noch keine fälligen Aufgaben';
     const act = activeOn(state.sel);
     let dayDone = 0, dayN = 0, dayPts = 0, dayMax = 0;
     act.forEach(r => { const ds = dayState(r, state.sel); dayDone += ds.done; dayN += ds.n; dayPts += ds.done*pointsFor(r); dayMax += ds.n*pointsFor(r); });
     $('sDayLbl').textContent = state.sel === t ? 'Heute' : fmtShort(state.sel);
     $('sDay').textContent = dayDone+' / '+dayN;
-    $('sDaySub').textContent = '+'+fmtNum(dayPts)+' von '+fmtNum(dayMax)+' möglichen Punkten';
+    $('sDaySub').textContent = '+'+fmtNum(dayPts)+' von '+fmtNum(dayMax)+' P.';
 
     // 30-Tage-Streifen
     const strip = $('strip'); strip.innerHTML = '';
@@ -792,7 +836,7 @@ select:focus{outline:none;border-color:var(--accent)}
     } else if (!act.length){
       list.innerHTML = '<li class="empty"><p>An diesem Tag war noch keine Routine aktiv.</p></li>';
     } else {
-      act.forEach(r => list.appendChild(isRitual(r) ? ritualItem(r, stats[r.id]) : checkItem(r, stats[r.id])));
+      act.forEach(r => list.appendChild(rowItem(r, stats[r.id])));
     }
 
     renderManage();
@@ -802,103 +846,81 @@ select:focus{outline:none;border-color:var(--accent)}
   const ICON_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4h6v3"/></svg>';
   const ICON_NO ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 
-  function checkItem(r, s){
-    const st = status(state.sel, r.id);
-    const li = document.createElement('li');
-    li.className = 'check';
-    li.dataset.id = r.id;
-    li.dataset.s = st === true ? 'done' : st === false ? 'miss' : 'open';
-
-    const mark = document.createElement('div'); mark.className = 'mark'; mark.setAttribute('aria-hidden','true');
-    mark.innerHTML = st === false ? ICON_NO : ICON_OK;
-
-    const info = document.createElement('div');
-    const nrow = document.createElement('div'); nrow.className = 'namerow';
-    const name = document.createElement('div'); name.className = 'name'; name.textContent = r.name;
-    const sw = starsWidget(starsOf(r), n => setStars(r, n), 'Wertigkeit von '+r.name);
-    const pts = document.createElement('span'); pts.className = 'starpts'; pts.textContent = fmtNum(pointsFor(r))+' P.';
-    pts.title = fmtNum(pointsFor(r))+' Punkte pro Tag, wenn erledigt';
-    nrow.append(name, sw, pts);
-    info.appendChild(nrow);
-    if (r.desc){ const d = document.createElement('div'); d.className = 'desc'; d.textContent = r.desc; info.appendChild(d); }
-    const meta = document.createElement('div'); meta.className = 'meta';
-    meta.innerHTML = '<span><b>'+fmtNum(s.points)+'</b> Punkte</span><span><b>'+(s.pct === null ? '–' : s.pct+' %')+'</b> zuverlässig</span><span>Serie <b>'+s.streak+'</b> '+(s.streak === 1 ? 'Tag' : 'Tage')+'</span>';
-    info.appendChild(meta);
-    const dots = document.createElement('div'); dots.className = 'dots'; dots.setAttribute('aria-hidden','true');
-    const t = today();
-    for (let i = 13; i >= 0; i--){
-      const d = addDays(state.sel, -i);
-      const sp = document.createElement('span');
-      const v = status(d, r.id);
-      if (d < r.start) sp.className = 'x';
-      else if (v === true) sp.className = 'd';
-      else if (v === false || d < t) sp.className = 'm';
-      if (i === 0) sp.classList.add('cur');
-      dots.appendChild(sp);
-    }
-    info.appendChild(dots);
-
-    const actions = document.createElement('div'); actions.className = 'actions';
-    const yes = document.createElement('button'); yes.className = 'pill yes'; yes.innerHTML = ICON_OK+'Erledigt';
-    yes.setAttribute('aria-pressed', st === true ? 'true' : 'false');
-    yes.addEventListener('click', () => setStatus(state.sel, r.id, st === true ? null : true));
-    const no = document.createElement('button'); no.className = 'pill no'; no.innerHTML = ICON_NO+'Nicht erledigt';
-    no.setAttribute('aria-pressed', st === false ? 'true' : 'false');
-    no.addEventListener('click', () => setStatus(state.sel, r.id, st === false ? null : false));
-    const del = document.createElement('button'); del.type = 'button'; del.className = 'iconbtn cardDel';
-    del.innerHTML = ICON_TRASH; del.title = 'Routine löschen'; del.setAttribute('aria-label', r.name+' löschen');
-    del.addEventListener('click', () => { state.confirmDel = state.confirmDel === r.id ? null : r.id; render(); });
-    actions.append(yes, no, del);
-
-    li.append(makeHandle(r.name), mark, info, actions);
-    if (state.confirmDel === r.id) li.appendChild(deleteConfirm(r));
-    return li;
+  let openSet = new Set();
+  try { openSet = new Set(JSON.parse(localStorage.getItem('ruti-open') || '[]')); } catch(e){}
+  function toggleOpen(id){
+    if (openSet.has(id)) openSet.delete(id); else openSet.add(id);
+    try { localStorage.setItem('ruti-open', JSON.stringify([...openSet])); } catch(e){}
+    render();
   }
+  function rowState(r, d){
+    const ds = dayState(r, d);
+    if (!ds.n) return 'open';
+    if (ds.done === ds.n) return 'done';
+    if (ds.miss === ds.n) return 'miss';
+    return ds.done || ds.miss ? 'part' : 'open';
+  }
+  function markBtn(kind, pressed, label, onClick){
+    const b = document.createElement('button'); b.type = 'button';
+    b.className = 'rbtn '+kind; b.innerHTML = kind === 'yes' ? ICON_OK : ICON_NO;
+    b.setAttribute('aria-pressed', pressed ? 'true' : 'false'); b.setAttribute('aria-label', label); b.title = label;
+    b.addEventListener('click', onClick);
+    return b;
+  }
+  const CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
 
-  function ritualItem(r, s){
-    const d0 = state.sel, t = today();
-    const ds = dayState(r, d0);
+  function rowItem(r, s){
+    const d0 = state.sel, t = today(), rit = isRitual(r);
+    const ds = dayState(r, d0), st = rowState(r, d0), open = openSet.has(r.id);
+    const keys = units(r, d0);
     const li = document.createElement('li');
-    li.className = 'check ritual';
-    li.dataset.id = r.id;
-    li.dataset.s = ds.n && ds.done === ds.n ? 'done' : ds.done ? 'part' : 'open';
+    li.className = 'rrow'+(open ? ' open' : '')+(rit ? ' ritual' : '');
+    li.dataset.id = r.id; li.dataset.s = st;
 
-    const mark = document.createElement('div'); mark.className = 'mark ringmark'; mark.setAttribute('aria-hidden','true');
-    if (li.dataset.s === 'done') mark.innerHTML = ICON_OK;
-    else { mark.textContent = ds.done+'/'+ds.n; mark.style.setProperty('--p', (ds.n ? ds.done/ds.n*100 : 0)+'%'); }
+    // Kopfzeile: ✗ | Titel | ✓
+    const head = document.createElement('div'); head.className = 'rhead';
+    const no = markBtn('no', st === 'miss', r.name+': nicht erledigt', () => setMany(d0, keys, st === 'miss' ? null : false));
+    const ttl = document.createElement('button'); ttl.type = 'button'; ttl.className = 'rtitle';
+    ttl.setAttribute('aria-expanded', open ? 'true' : 'false');
+    const nm = document.createElement('span'); nm.className = 'rname'; nm.textContent = r.name;
+    ttl.appendChild(nm);
+    if (rit){ const pr = document.createElement('span'); pr.className = 'rprog'; pr.textContent = ds.done+'/'+ds.n; pr.title = ds.done+' von '+ds.n+' Schritten erledigt'; ttl.appendChild(pr); }
+    const ch = document.createElement('span'); ch.className = 'chev'; ch.innerHTML = CHEV; ttl.appendChild(ch);
+    ttl.addEventListener('click', () => toggleOpen(r.id));
+    const yes = markBtn('yes', st === 'done', r.name+': erledigt', () => setMany(d0, keys, st === 'done' ? null : true));
+    head.append(no, ttl, yes);
+    li.appendChild(head);
+    if (!open) return li;
 
-    const info = document.createElement('div');
-    const nrow = document.createElement('div'); nrow.className = 'namerow';
-    const name = document.createElement('div'); name.className = 'name'; name.textContent = r.name;
-    const badge = document.createElement('span'); badge.className = 'badge'; badge.textContent = 'Ritual';
-    const sw = starsWidget(starsOf(r), n => setStars(r, n), 'Wertigkeit von '+r.name);
-    const pts = document.createElement('span'); pts.className = 'starpts'; pts.textContent = fmtNum(pointsFor(r))+' P. je Schritt';
-    nrow.append(name, badge, sw, pts);
-    info.appendChild(nrow);
-    if (r.desc){ const d = document.createElement('div'); d.className = 'desc'; d.textContent = r.desc; info.appendChild(d); }
-
-    const steps = document.createElement('ol'); steps.className = 'steps';
-    (r.steps || []).filter(st => (st.start || r.start) <= d0).forEach((st, i) => {
-      const key = r.id+':'+st.id, v = status(d0, key);
-      const b = document.createElement('button'); b.type = 'button'; b.className = 'step'+(v === true ? ' on' : '');
-      b.setAttribute('aria-pressed', v === true ? 'true' : 'false');
-      const box = document.createElement('span'); box.className = 'box'; box.innerHTML = v === true ? ICON_OK : '';
-      const nm = document.createElement('span'); nm.className = 'snm'; nm.textContent = st.name;
-      const sp = document.createElement('span'); sp.className = 'spts'; sp.textContent = v === true ? '+'+fmtNum(pointsFor(r)) : fmtNum(pointsFor(r));
-      b.append(box, nm, sp);
-      b.addEventListener('click', () => setStatus(d0, key, v === true ? null : true));
-      const liS = document.createElement('li'); liS.appendChild(b); steps.appendChild(liS);
-    });
-    info.appendChild(steps);
-
-    const meta = document.createElement('div'); meta.className = 'meta';
-    meta.innerHTML = '<span><b>'+ds.done+' von '+ds.n+'</b> Schritten</span><span><b>'+fmtNum(s.points)+'</b> Punkte</span><span><b>'+(s.pct === null ? '–' : s.pct+' %')+'</b> zuverlässig</span><span>Serie <b>'+s.streak+'</b> '+(s.streak === 1 ? 'Tag' : 'Tage')+' komplett</span>';
-    info.appendChild(meta);
+    // Details
+    const body = document.createElement('div'); body.className = 'rbody';
+    if (rit){
+      const ol = document.createElement('ol'); ol.className = 'srows';
+      (r.steps || []).filter(x => (x.start || r.start) <= d0).forEach(x => {
+        const key = r.id+':'+x.id, v = status(d0, key);
+        const li2 = document.createElement('li'); li2.className = 'srow'; li2.dataset.s = v === true ? 'done' : v === false ? 'miss' : 'open';
+        const n2 = document.createElement('span'); n2.className = 'sname'; n2.textContent = x.name;
+        li2.append(
+          markBtn('no sm', v === false, x.name+': nicht erledigt', () => setStatus(d0, key, v === false ? null : false)),
+          n2,
+          markBtn('yes sm', v === true, x.name+': erledigt', () => setStatus(d0, key, v === true ? null : true))
+        );
+        ol.appendChild(li2);
+      });
+      body.appendChild(ol);
+    }
+    if (r.desc){ const d = document.createElement('p'); d.className = 'rdesc'; d.textContent = r.desc; body.appendChild(d); }
+    const line = document.createElement('div'); line.className = 'rline';
+    line.appendChild(starsWidget(starsOf(r), n => setStars(r, n), 'Wertigkeit von '+r.name));
+    const pts = document.createElement('span'); pts.className = 'starpts'; pts.textContent = fmtNum(pointsFor(r))+(rit ? ' P. je Schritt' : ' P.');
+    line.appendChild(pts);
+    const meta = document.createElement('span'); meta.className = 'rmeta';
+    meta.textContent = fmtNum(s.points)+' P. gesamt · '+(s.pct === null ? '–' : s.pct+' %')+' · Serie '+s.streak;
+    line.appendChild(meta);
+    body.appendChild(line);
     const dots = document.createElement('div'); dots.className = 'dots'; dots.setAttribute('aria-hidden','true');
     for (let i = 13; i >= 0; i--){
-      const d = addDays(d0, -i);
-      const sp = document.createElement('span');
-      const x = dayState(r, d);
+      const d = addDays(d0, -i), x = dayState(r, d), sp = document.createElement('span');
       if (!x.n) sp.className = 'x';
       else if (x.done === x.n) sp.className = 'd';
       else if (x.done > 0) sp.className = 'p';
@@ -906,20 +928,15 @@ select:focus{outline:none;border-color:var(--accent)}
       if (i === 0) sp.classList.add('cur');
       dots.appendChild(sp);
     }
-    info.appendChild(dots);
-
-    const actions = document.createElement('div'); actions.className = 'actions';
-    const all = ds.n > 0 && ds.done === ds.n;
-    const yes = document.createElement('button'); yes.className = 'pill yes'; yes.innerHTML = ICON_OK+(all ? 'Alle erledigt' : 'Alle abhaken');
-    yes.setAttribute('aria-pressed', all ? 'true' : 'false');
-    yes.addEventListener('click', () => setMany(d0, units(r, d0), all ? null : true));
-    const del = document.createElement('button'); del.type = 'button'; del.className = 'iconbtn cardDel';
-    del.innerHTML = ICON_TRASH; del.title = 'Ritual löschen'; del.setAttribute('aria-label', r.name+' löschen');
+    const foot = document.createElement('div'); foot.className = 'rfoot';
+    const ed = document.createElement('button'); ed.type = 'button'; ed.className = 'small'; ed.textContent = 'Bearbeiten';
+    ed.addEventListener('click', () => startEdit(r));
+    const del = document.createElement('button'); del.type = 'button'; del.className = 'small del'; del.textContent = 'Löschen';
     del.addEventListener('click', () => { state.confirmDel = state.confirmDel === r.id ? null : r.id; render(); });
-    actions.append(yes, del);
-
-    li.append(makeHandle(r.name), mark, info, actions);
-    if (state.confirmDel === r.id) li.appendChild(deleteConfirm(r));
+    foot.append(dots, ed, del);
+    body.appendChild(foot);
+    if (state.confirmDel === r.id) body.appendChild(deleteConfirm(r));
+    li.appendChild(body);
     return li;
   }
 
@@ -1170,7 +1187,7 @@ select:focus{outline:none;border-color:var(--accent)}
       animation: 160,
       delay: 220, delayOnTouchOnly: true, touchStartThreshold: 8,
       forceFallback: true, fallbackTolerance: 4,
-      filter: '.pill, .small, .btn, .iconbtn, .confirm, .star, .step, input, textarea',
+      filter: '.rbtn, .pill, .small, .btn, .iconbtn, .confirm, .star, input, textarea',
       preventOnFilter: false,
       ghostClass: 'drag-ghost', chosenClass: 'drag-chosen', fallbackClass: 'drag-float',
       scroll: true, scrollSensitivity: 80, scrollSpeed: 14, bubbleScroll: true,
