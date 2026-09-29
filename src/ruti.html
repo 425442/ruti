@@ -417,57 +417,6 @@ select:focus{outline:none;border-color:var(--accent)}
 .perseg button{border:0;background:none;border-radius:7px;padding:3px 10px;font-size:12.5px;font-weight:700;color:var(--muted);text-align:center}
 .perseg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 @media (min-width:620px){.perseg{flex-direction:row}.perseg button{padding:7px 12px;font-size:13.5px}}
-/* Konto & Anmeldung */
-body.auth-mode > header, body.auth-mode > main, body.auth-mode > .tabbar{display:none}
-.auth{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:clamp(24px,8vh,80px) 16px 40px}
-.auth-card{width:100%;max-width:420px;background:var(--surface);border-radius:18px;box-shadow:var(--shadow);padding:24px 22px;display:flex;flex-direction:column;gap:14px}
-.auth-brand h1{font-family:var(--display);font-size:34px;letter-spacing:-.02em;margin:0}
-.auth-brand p{margin:4px 0 0;color:var(--muted);font-size:14px}
-.auth-tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-2);border-radius:12px;padding:3px;gap:3px}
-.auth-tabs button{border:0;background:none;border-radius:9px;padding:9px;font-weight:700;color:var(--muted)}
-.auth-tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.auth-form{display:flex;flex-direction:column;gap:12px;margin:0}
-.auth-form .lead{margin:0;font-size:14px;color:var(--muted)}
-.auth-msg{border-radius:10px;padding:10px 12px;font-size:14px;background:var(--miss-soft);color:var(--ink)}
-.auth-msg.ok{background:var(--done-soft)}
-.btn.wide{width:100%;padding:12px}
-.linkbtn{border:0;background:none;color:var(--accent);font-weight:600;padding:4px 0;cursor:pointer;font-size:14px;align-self:flex-start}
-.auth-foot{margin:0;border-top:1px solid var(--line);padding-top:12px}
-.auth-foot .linkbtn{color:var(--muted)}
-.pw{display:flex;position:relative}
-.pw input{flex:1;padding-right:72px}
-.pw .eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--accent);font-weight:600;font-size:12.5px;padding:6px}
-.pwtools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:-6px}
-.meter{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
-.meter i{display:block;width:70px;height:6px;border-radius:3px;background:var(--empty);position:relative;overflow:hidden}
-.meter i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--w,0%);background:var(--c,var(--miss));border-radius:3px}
-.meter em{font-style:normal;font-weight:600}
-.check-lbl{flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink);font-weight:500}
-.check-lbl input{width:18px;height:18px}
-label small{font-weight:500;color:var(--faint)}
-
-.acctbtn{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;height:34px;min-width:34px;padding:0 10px;font-weight:700;font-size:13.5px;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
-.acctbtn .av{width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:12px;margin-left:-6px}
-.topright{display:flex;align-items:center;gap:10px}
-.overlay{position:fixed;inset:0;background:rgba(10,16,14,.45);z-index:40;display:flex;align-items:flex-start;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 24px) 16px 24px;overflow-y:auto}
-.sheet{width:100%;max-width:460px;background:var(--surface);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.25);padding:18px 20px 22px;display:flex;flex-direction:column;gap:12px}
-.sheet-head{display:flex;align-items:center;justify-content:space-between}
-.acct-info{display:flex;flex-direction:column;gap:4px;font-size:14px}
-.acct-info b{font-size:16px}
-.acct-info .st{font-size:13px;color:var(--muted)}
-.acct-info .st.warn{color:var(--miss)}
-.acct-box{background:var(--accent-soft);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
-.acct-box p{margin:0;font-size:14px}
-.acct-sec{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
-.acct-sec summary{cursor:pointer;font-weight:700}
-.acct-sec.danger summary{color:var(--miss)}
-.acct-form{display:flex;flex-direction:column;gap:10px;margin-top:10px}
-.acct-actions{display:flex;gap:8px;flex-wrap:wrap}
-.import-banner{background:var(--accent-soft);border-radius:12px;padding:10px 12px;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px}
-.import-banner p{margin:0;flex:1 1 220px}
-.verify-banner{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-top:12px;font-size:13.5px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.verify-banner p{margin:0;flex:1 1 200px;color:var(--muted)}
-
 /* Placeholder tabs */
 .soon{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:28px 22px;margin-top:14px;max-width:620px}
 .soon h2{font-size:24px;margin-bottom:8px}
@@ -482,119 +431,9 @@ label small{font-weight:500;color:var(--faint)}
 <header class="top">
   <div class="wrap">
     <div class="brand"><h1>Ruti</h1><span class="date" id="todayText"></span></div>
-    <div class="topright">
-      <div class="sync" id="sync" data-s="loading"><i></i><span id="syncText">Lade …</span></div>
-      <button class="acctbtn" id="acctBtn" type="button" hidden></button>
-    </div>
+    <div class="sync" id="sync" data-s="loading"><i></i><span id="syncText">Verbinde …</span></div>
   </div>
 </header>
-
-<section class="auth" id="authScreen" hidden>
-  <div class="auth-card">
-    <div class="auth-brand">
-      <h1>Ruti</h1>
-      <p>Routinen, Ausgaben und Rauchen – gespeichert in deinem Konto, auf all deinen Geräten.</p>
-    </div>
-    <div class="auth-tabs" id="authTabs" role="tablist">
-      <button type="button" data-v="login" role="tab">Anmelden</button>
-      <button type="button" data-v="register" role="tab">Registrieren</button>
-    </div>
-    <div class="auth-msg" id="authMsg" role="alert" hidden></div>
-
-    <form class="auth-form" id="fLogin" data-v="login" novalidate>
-      <label for="liEmail">E-Mail-Adresse
-        <input type="email" id="liEmail" name="email" autocomplete="username" inputmode="email" required>
-      </label>
-      <label for="liPw">Passwort
-        <span class="pw"><input type="password" id="liPw" name="password" autocomplete="current-password" required><button type="button" class="eye" aria-label="Passwort anzeigen">Zeigen</button></span>
-      </label>
-      <label class="check-lbl" for="liRemember"><input type="checkbox" id="liRemember" checked> Angemeldet bleiben</label>
-      <button class="btn wide" type="submit">Anmelden</button>
-      <button type="button" class="linkbtn" data-go="forgot">Passwort vergessen?</button>
-    </form>
-
-    <form class="auth-form" id="fRegister" data-v="register" novalidate hidden>
-      <label for="reName">Name <small>(optional)</small>
-        <input type="text" id="reName" name="name" autocomplete="given-name" maxlength="80">
-      </label>
-      <label for="reEmail">E-Mail-Adresse
-        <input type="email" id="reEmail" name="email" autocomplete="email" inputmode="email" required>
-      </label>
-      <label for="rePw">Passwort
-        <span class="pw"><input type="password" id="rePw" name="new-password" autocomplete="new-password" minlength="10" required><button type="button" class="eye" aria-label="Passwort anzeigen">Zeigen</button></span>
-      </label>
-      <div class="pwtools"><button type="button" class="small suggest" data-for="rePw" data-rep="rePw2">Sicheres Passwort vorschlagen</button><span class="meter" data-for="rePw"><i></i><em></em></span></div>
-      <label for="rePw2">Passwort wiederholen
-        <input type="password" id="rePw2" autocomplete="new-password" required>
-      </label>
-      <p class="hint">Mindestens 10 Zeichen, mit mindestens zwei Zeichenarten (Buchstaben, Ziffern, Sonderzeichen).</p>
-      <button class="btn wide" type="submit">Konto erstellen</button>
-    </form>
-
-    <form class="auth-form" id="fForgot" data-v="forgot" novalidate hidden>
-      <p class="lead">Gib die E-Mail-Adresse deines Kontos ein. Wir schicken dir einen Link, mit dem du ein neues Passwort festlegst.</p>
-      <label for="foEmail">E-Mail-Adresse
-        <input type="email" id="foEmail" autocomplete="username" inputmode="email" required>
-      </label>
-      <button class="btn wide" type="submit">Link zum Zurücksetzen senden</button>
-      <button type="button" class="linkbtn" data-go="login">Zurück zur Anmeldung</button>
-    </form>
-
-    <form class="auth-form" id="fReset" data-v="reset" novalidate hidden>
-      <p class="lead">Lege ein neues Passwort fest. Danach bist du auf diesem Gerät angemeldet, alle anderen Geräte werden abgemeldet.</p>
-      <input type="text" autocomplete="username" hidden aria-hidden="true" tabindex="-1">
-      <label for="rsPw">Neues Passwort
-        <span class="pw"><input type="password" id="rsPw" autocomplete="new-password" minlength="10" required><button type="button" class="eye" aria-label="Passwort anzeigen">Zeigen</button></span>
-      </label>
-      <div class="pwtools"><button type="button" class="small suggest" data-for="rsPw" data-rep="rsPw2">Sicheres Passwort vorschlagen</button><span class="meter" data-for="rsPw"><i></i><em></em></span></div>
-      <label for="rsPw2">Passwort wiederholen
-        <input type="password" id="rsPw2" autocomplete="new-password" required>
-      </label>
-      <button class="btn wide" type="submit">Passwort speichern</button>
-    </form>
-
-    <p class="auth-foot"><button type="button" class="linkbtn" id="authLocal">Ohne Konto nur auf diesem Gerät nutzen</button></p>
-  </div>
-</section>
-
-<div class="overlay" id="acctPanel" hidden>
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="acctTitle">
-    <div class="sheet-head"><h2 id="acctTitle">Dein Konto</h2><button type="button" class="iconbtn" id="acctClose" aria-label="Schließen">✕</button></div>
-    <div class="acct-info" id="acctInfo"></div>
-    <div class="acct-box" id="acctImport" hidden>
-      <p>Auf diesem Gerät gibt es Ruti-Daten, die noch nicht in deinem Konto sind.</p>
-      <button type="button" class="btn" data-import="1">In mein Konto übernehmen</button>
-    </div>
-    <details class="acct-sec"><summary>Name ändern</summary>
-      <form id="fAcctName" class="acct-form" novalidate>
-        <label for="acName">Name<input type="text" id="acName" autocomplete="given-name" maxlength="80"></label>
-        <button class="btn" type="submit">Speichern</button>
-      </form>
-    </details>
-    <details class="acct-sec"><summary>Passwort ändern</summary>
-      <form id="fChange" class="acct-form" novalidate>
-        <input type="text" autocomplete="username" id="chUser" hidden aria-hidden="true" tabindex="-1">
-        <label for="chCur">Aktuelles Passwort<span class="pw"><input type="password" id="chCur" autocomplete="current-password" required><button type="button" class="eye" aria-label="Passwort anzeigen">Zeigen</button></span></label>
-        <label for="chPw">Neues Passwort<span class="pw"><input type="password" id="chPw" autocomplete="new-password" minlength="10" required><button type="button" class="eye" aria-label="Passwort anzeigen">Zeigen</button></span></label>
-        <div class="pwtools"><button type="button" class="small suggest" data-for="chPw" data-rep="chPw2">Sicheres Passwort vorschlagen</button><span class="meter" data-for="chPw"><i></i><em></em></span></div>
-        <label for="chPw2">Neues Passwort wiederholen<input type="password" id="chPw2" autocomplete="new-password" required></label>
-        <button class="btn" type="submit">Passwort ändern</button>
-      </form>
-    </details>
-    <div class="acct-actions">
-      <button type="button" class="btn ghost" id="btnLogout">Abmelden</button>
-      <button type="button" class="btn ghost" id="btnLogoutAll">Auf allen Geräten abmelden</button>
-    </div>
-    <details class="acct-sec danger"><summary>Konto löschen</summary>
-      <form id="fDelete" class="acct-form" novalidate>
-        <p class="hint">Löscht dein Konto und alle gespeicherten Daten endgültig. Das lässt sich nicht rückgängig machen. Tipp: Vorher unter „Routinen → Datensicherung“ eine Sicherung speichern.</p>
-        <input type="text" autocomplete="username" id="deUser" hidden aria-hidden="true" tabindex="-1">
-        <label for="dePw">Passwort zur Bestätigung<input type="password" id="dePw" autocomplete="current-password" required></label>
-        <button class="btn danger" type="submit">Konto endgültig löschen</button>
-      </form>
-    </details>
-  </div>
-</div>
 
 <nav class="tabbar" role="tablist" aria-label="Bereiche">
   <button role="tab" id="t-routinen" data-tab="routinen" aria-selected="true">
@@ -609,15 +448,6 @@ label small{font-weight:500;color:var(--faint)}
 </nav>
 
 <main class="wrap">
-  <div class="import-banner" id="importBanner" hidden>
-    <p>Auf diesem Gerät gibt es Ruti-Daten, die noch nicht in deinem Konto sind.</p>
-    <button type="button" class="btn" data-import="1">In mein Konto übernehmen</button>
-    <button type="button" class="btn ghost" id="importSkip">Nicht übernehmen</button>
-  </div>
-  <div class="verify-banner" id="verifyBanner" hidden>
-    <p>Bitte bestätige deine E-Mail-Adresse über den Link in unserer E-Mail.</p>
-    <button type="button" class="linkbtn" id="verifyResend">E-Mail erneut senden</button>
-  </div>
   <section id="tab-routinen" role="tabpanel" aria-labelledby="t-routinen">
     <div id="banner"></div>
     <div class="rstats">
@@ -989,16 +819,12 @@ label small{font-weight:500;color:var(--faint)}
     if (state.sel > t) state.sel = t;
     $('todayText').textContent = fmtLong(t);
 
-    if (state.mode === 'account') syncLabel();
-    else {
-      const sync = $('sync');
-      sync.dataset.s = state.mode === 'local' && state.storageOk ? 'live' : state.mode;
-      $('syncText').textContent = state.mode === 'local' ? (state.storageOk ? (API ? 'Nur auf diesem Gerät' : 'Auf diesem Gerät gespeichert') : 'Nicht gespeichert') : 'Lade …';
-    }
-    $('banner').innerHTML = state.mode === 'local' && state.note ? '<div class="banner">'+state.note+'</div>'
-      : state.mode === 'local' && !state.storageOk
+    const sync = $('sync');
+    sync.dataset.s = state.mode === 'local' && state.storageOk ? 'live' : state.mode;
+    $('syncText').textContent = state.mode === 'live' ? 'Synchronisiert' : state.mode === 'local' ? (state.storageOk ? 'Auf diesem Gerät gespeichert' : 'Nicht gespeichert') : 'Lade …';
+    $('banner').innerHTML = state.mode === 'local' && !state.storageOk
       ? '<div class="banner">Dieser Browser erlaubt keine Speicherung (z. B. privates Fenster). Änderungen gehen beim Schließen verloren. Öffne Ruti in einem normalen Browserfenster.</div>' : '';
-    $('backup').hidden = state.mode === 'loading';
+    $('backup').hidden = state.mode !== 'local';
 
     // Summary
     const stats = {};
@@ -1239,6 +1065,7 @@ label small{font-weight:500;color:var(--faint)}
     else persist();
   }
 
+  const STORE_KEY = 'ruti-data-v1';
   function cleanSmoke(s){
     const out = { price: null, entries: [] };
     if (s && typeof s === 'object'){
@@ -1251,13 +1078,12 @@ label small{font-weight:500;color:var(--faint)}
     return out;
   }
   function persist(){
-    try { localStorage.setItem(dataKey(), JSON.stringify(snapshot())); state.storageOk = true; }
-    catch(e){ state.storageOk = false; if (state.mode !== 'account') render(); }
-    if (state.mode === 'account') queueSync();
+    try { localStorage.setItem(STORE_KEY, JSON.stringify({ version:1, routines: state.routines, months: state.months, smoke: state.smoke, exp: state.exp })); state.storageOk = true; }
+    catch(e){ state.storageOk = false; render(); }
   }
   function loadLocal(){
     try {
-      const raw = localStorage.getItem(dataKey());
+      const raw = localStorage.getItem(STORE_KEY);
       state.storageOk = true;
       if (!raw) return;
       const d = JSON.parse(raw);
@@ -2222,403 +2048,28 @@ label small{font-weight:500;color:var(--faint)}
   document.addEventListener('visibilitychange', () => { if (!document.hidden){ dayCheck(); if (!$('tab-rauchen').hidden) renderSmoke(); } });
   setInterval(dayCheck, 60000);
 
-  /* ---------- Konto & Synchronisierung ---------- */
-  // Server-API liegt neben der App (…/ruti/api/). Auf GitHub Pages oder als lokale Datei gibt es keinen Server.
-  const API = (() => {
-    if (!/^https?:$/.test(location.protocol)) return null;
-    if (/github\.io$/i.test(location.hostname)) return null;
-    try { return new URL('../api/index.php', location.href).href; } catch(e){ return null; }
-  })();
-  const acct = { token:null, user:null, version:0, dirty:false, syncing:false, online:true, timer:null, resetToken:null };
-  const LS = {
-    get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
-    set(k, v){ try { localStorage.setItem(k, v); } catch(e){} },
-    del(k){ try { localStorage.removeItem(k); } catch(e){} }
-  };
-  function tokGet(){ try { return localStorage.getItem('ruti-token') || sessionStorage.getItem('ruti-token'); } catch(e){ return null; } }
-  function tokSet(t, remember){
-    try { localStorage.removeItem('ruti-token'); sessionStorage.removeItem('ruti-token'); if (t) (remember ? localStorage : sessionStorage).setItem('ruti-token', t); } catch(e){}
-  }
-  function cachedUser(){ try { return JSON.parse(LS.get('ruti-user') || 'null'); } catch(e){ return null; } }
-
-  async function api(action, body){
-    const headers = { 'Content-Type':'application/json' };
-    if (acct.token) headers['X-Ruti-Token'] = acct.token;
-    let res;
-    try { res = await fetch(API+'?a='+action, { method:'POST', headers, body: JSON.stringify(body || {}), cache:'no-store' }); }
-    catch(e){ const err = new Error('Keine Verbindung zum Server.'); err.code = 'offline'; throw err; }
-    let j = null; try { j = await res.json(); } catch(e){}
-    if (!j){ const err = new Error('Unerwartete Antwort vom Server.'); err.code = 'bad_response'; err.status = res.status; throw err; }
-    if (!j.ok){ const err = new Error(j.message || 'Fehler'); err.code = j.error; err.status = res.status; err.payload = j; throw err; }
-    return j;
-  }
-
-  const dataKey = () => state.mode === 'account' && acct.user ? 'ruti-u-'+acct.user.id : 'ruti-data-v1';
-  function snapshot(){ return { version:1, routines: state.routines, months: state.months, smoke: state.smoke, exp: state.exp }; }
-  function applyAll(d){
-    state.routines = Array.isArray(d && d.routines) ? d.routines.filter(r => r && r.id && r.name && r.start) : [];
-    state.months = d && d.months && typeof d.months === 'object' ? d.months : {};
-    state.smoke = cleanSmoke(d && d.smoke);
-    state.exp = cleanExp(d && d.exp);
-  }
-  function refreshViews(){ render(); renderSmoke(); renderExp(); }
-  function refreshAll(){ resetForm(); initSmokeForms(); initExpForms(); refreshViews(); }
-  function hasContent(d){ return !!d && !!((d.routines || []).length || (d.smoke && d.smoke.entries || []).length || (d.exp && d.exp.entries || []).length || (d.exp && d.exp.cats || []).length); }
-  function cacheLocal(){ LS.set(dataKey(), JSON.stringify(snapshot())); }
-  function saveMeta(){ if (acct.user) LS.set('ruti-u-'+acct.user.id+'-meta', JSON.stringify({ version: acct.version, dirty: acct.dirty })); }
-  function loadMeta(){ try { const m = JSON.parse(LS.get('ruti-u-'+acct.user.id+'-meta') || '{}'); acct.version = m.version || 0; acct.dirty = !!m.dirty; } catch(e){ acct.version = 0; acct.dirty = false; } }
-
-  function setSync(s, text){ $('sync').dataset.s = s; $('syncText').textContent = text; }
-  function syncLabel(){
-    if (state.mode !== 'account') return;
-    if (!acct.online) setSync('local', acct.dirty ? 'Offline – wird gespeichert, sobald du online bist' : 'Offline');
-    else if (acct.syncing || acct.dirty) setSync('loading', 'Speichert …');
-    else setSync('live', 'Im Konto gespeichert');
-  }
-  function queueSync(){
-    acct.dirty = true; saveMeta(); syncLabel();
-    clearTimeout(acct.timer); acct.timer = setTimeout(syncNow, 1200);
-  }
-  // Konflikt: Server-Stand als Basis, lokale Abhaken/Einträge ergänzen
-  function mergeData(s, l){
-    const out = JSON.parse(JSON.stringify(s || {}));
-    l = l || {};
-    out.months = out.months || {};
-    Object.keys(l.months || {}).forEach(mk => {
-      const o = out.months[mk] = out.months[mk] || { days:{} }; o.days = o.days || {};
-      const ld = (l.months[mk] || {}).days || {};
-      Object.keys(ld).forEach(d => { o.days[d] = Object.assign({}, o.days[d] || {}, ld[d]); });
-    });
-    const ids = new Set((out.routines || []).map(r => r.id));
-    out.routines = (out.routines || []).concat((l.routines || []).filter(r => !ids.has(r.id)));
-    out.smoke = out.smoke || { price:null, entries:[] };
-    const ts = new Set((out.smoke.entries || []).map(e => e.t));
-    out.smoke.entries = (out.smoke.entries || []).concat(((l.smoke || {}).entries || []).filter(e => !ts.has(e.t)));
-    if (out.smoke.price == null && l.smoke && l.smoke.price != null) out.smoke.price = l.smoke.price;
-    out.exp = out.exp || {};
-    ['entries','cats'].forEach(k => {
-      const ex = new Set((out.exp[k] || []).map(x => x.id));
-      out.exp[k] = (out.exp[k] || []).concat(((l.exp || {})[k] || []).filter(x => !ex.has(x.id)));
-    });
-    if (out.exp.budget == null && l.exp && l.exp.budget != null){ out.exp.budget = l.exp.budget; out.exp.budgetStart = l.exp.budgetStart; }
-    return out;
-  }
-  async function syncNow(){
-    if (state.mode !== 'account' || acct.syncing || state.dragging) return;
-    acct.syncing = true; syncLabel();
-    try {
-      if (acct.dirty){
-        try {
-          const r = await api('data_put', { data: snapshot(), base: acct.version });
-          acct.version = r.version; acct.dirty = false;
-        } catch(e){
-          if (e.code !== 'conflict') throw e;
-          applyAll(mergeData(e.payload.data, snapshot())); cacheLocal();
-          const r = await api('data_put', { data: snapshot(), base: e.payload.version });
-          acct.version = r.version; acct.dirty = false;
-          refreshViews(); toast('Mit Änderungen von einem anderen Gerät zusammengeführt');
-        }
-      } else {
-        const r = await api('data_get', { since: acct.version });
-        if (!r.unchanged){ if (r.data){ applyAll(r.data); cacheLocal(); refreshViews(); } acct.version = r.version; }
-      }
-      acct.online = true; saveMeta();
-    } catch(e){
-      if (e.code === 'offline' || e.code === 'bad_response') acct.online = false;
-      else if (e.status === 401){ acct.syncing = false; sessionLost(); return; }
-      else toast(e.message);
-    } finally {
-      acct.syncing = false; syncLabel();
-    }
-  }
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNow(); });
-  window.addEventListener('online', () => { acct.online = true; syncNow(); });
-  window.addEventListener('focus', () => syncNow());
-  setInterval(() => { if (!document.hidden) syncNow(); }, 60000);
-
-  // --- Ansichten wechseln ---
-  function showAuth(view){
-    document.body.classList.add('auth-mode');
-    $('authScreen').hidden = false; $('acctPanel').hidden = true;
-    authView(view || 'login');
-  }
-  function showApp(){ document.body.classList.remove('auth-mode'); $('authScreen').hidden = true; }
-  function authMsg(text, good){ const m = $('authMsg'); m.hidden = !text; m.textContent = text || ''; m.classList.toggle('ok', !!good); }
-  function authView(v){
-    ['fLogin','fRegister','fForgot','fReset'].forEach(id => { $(id).hidden = $(id).dataset.v !== v; });
-    $('authTabs').hidden = v === 'reset' || v === 'forgot';
-    document.querySelectorAll('#authTabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.v === v ? 'true' : 'false'));
-    $('authLocal').parentElement.hidden = v === 'reset';
-    authMsg('');
-    const f = document.querySelector('.auth-form[data-v="'+v+'"] input:not([hidden])'); if (f) setTimeout(() => f.focus(), 30);
-  }
-  document.querySelectorAll('#authTabs button').forEach(b => b.addEventListener('click', () => authView(b.dataset.v)));
-  document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => {
-    if (b.dataset.go === 'forgot') $('foEmail').value = $('liEmail').value;
-    authView(b.dataset.go);
-  }));
-
-  // --- Passwort-Werkzeuge ---
-  function suggestPassword(){
-    const L = 'abcdefghijkmnopqrstuvwxyz', U = 'ABCDEFGHJKLMNPQRSTUVWXYZ', D = '23456789', all = L+U+D;
-    const rnd = n => { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; };
-    let s;
-    do { s = Array.from({ length:16 }, () => all[rnd(all.length)]).join(''); } while (!(/[a-z]/.test(s) && /[A-Z]/.test(s) && /\d/.test(s)));
-    return s.match(/.{4}/g).join('-');     // z. B. Kx7m-Qp2d-…: gut lesbar, auch am Handy tippbar
-  }
-  function strength(p){
-    if (!p) return { w:0, t:'', c:'var(--empty)' };
-    const cls = [/[a-z]/, /[A-Z]/, /\d/, /[^A-Za-z0-9]/].filter(r => r.test(p)).length;
-    let sc = 0;
-    if (p.length >= 10) sc++; if (p.length >= 14) sc++; if (p.length >= 18) sc++;
-    if (cls >= 2) sc++; if (cls >= 3) sc++;
-    if (p.length < 10 || cls < 2) return { w:25, t:'zu schwach', c:'var(--miss)' };
-    if (sc <= 3) return { w:55, t:'mittel', c:'#D18A00' };
-    return { w:100, t:'stark', c:'var(--done)' };
-  }
-  function updateMeter(inp){
-    const m = document.querySelector('.meter[data-for="'+inp.id+'"]'); if (!m) return;
-    const s = strength(inp.value);
-    m.querySelector('i').style.setProperty('--w', s.w+'%'); m.querySelector('i').style.setProperty('--c', s.c);
-    m.querySelector('em').textContent = s.t;
-  }
-  document.querySelectorAll('.meter').forEach(m => { const inp = $(m.dataset.for); inp.addEventListener('input', () => updateMeter(inp)); });
-  document.querySelectorAll('.suggest').forEach(b => b.addEventListener('click', () => {
-    const p = suggestPassword(), a = $(b.dataset.for), r = $(b.dataset.rep);
-    a.value = p; r.value = p; a.type = 'text';
-    const eye = a.parentElement.querySelector('.eye'); if (eye) eye.textContent = 'Verbergen';
-    updateMeter(a);
-    try { navigator.clipboard.writeText(p).then(() => toast('Passwort vorgeschlagen und kopiert – dein Browser bietet an, es zu speichern'), () => toast('Passwort vorgeschlagen – bitte notieren oder im Browser speichern')); }
-    catch(e){ toast('Passwort vorgeschlagen – bitte notieren oder im Browser speichern'); }
-  }));
-  document.querySelectorAll('.pw .eye').forEach(b => b.addEventListener('click', () => {
-    const i = b.parentElement.querySelector('input'); const show = i.type === 'password';
-    i.type = show ? 'text' : 'password'; b.textContent = show ? 'Verbergen' : 'Zeigen';
-    b.setAttribute('aria-label', show ? 'Passwort verbergen' : 'Passwort anzeigen');
-  }));
-  function busy(form, on){ form.querySelectorAll('button, input').forEach(x => { x.disabled = on; }); }
-  const validMail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-
-  // --- Formulare ---
-  $('fLogin').addEventListener('submit', async ev => {
-    ev.preventDefault();
-    const email = $('liEmail').value.trim(), pw = $('liPw').value;
-    if (!validMail(email)) return authMsg('Bitte gib deine E-Mail-Adresse ein.');
-    if (!pw) return authMsg('Bitte gib dein Passwort ein.');
-    busy(ev.target, true);
-    try { const r = await api('login', { email, password: pw }); $('liPw').value = ''; await startAccount(r.user, r.token, $('liRemember').checked); }
-    catch(e){ authMsg(e.message); }
-    finally { busy(ev.target, false); }
-  });
-  $('fRegister').addEventListener('submit', async ev => {
-    ev.preventDefault();
-    const email = $('reEmail').value.trim(), pw = $('rePw').value;
-    if (!validMail(email)) return authMsg('Bitte gib eine gültige E-Mail-Adresse ein.');
-    if (strength(pw).w < 50) return authMsg('Das Passwort ist zu schwach: mindestens 10 Zeichen und zwei Zeichenarten. Tipp: „Sicheres Passwort vorschlagen“.');
-    if (pw !== $('rePw2').value) return authMsg('Die beiden Passwörter stimmen nicht überein.');
-    busy(ev.target, true);
-    try {
-      const r = await api('register', { email, name: $('reName').value.trim(), password: pw });
-      $('rePw').value = ''; $('rePw2').value = '';
-      await startAccount(r.user, r.token, true);
-      toast(r.mailed ? 'Konto erstellt. Wir haben dir eine E-Mail zur Bestätigung geschickt.' : 'Konto erstellt.');
-    } catch(e){ authMsg(e.message); }
-    finally { busy(ev.target, false); }
-  });
-  $('fForgot').addEventListener('submit', async ev => {
-    ev.preventDefault();
-    const email = $('foEmail').value.trim();
-    if (!validMail(email)) return authMsg('Bitte gib deine E-Mail-Adresse ein.');
-    busy(ev.target, true);
-    try { const r = await api('forgot', { email }); authMsg(r.message+' Schau auch im Spam-Ordner nach.', true); }
-    catch(e){ authMsg(e.message); }
-    finally { busy(ev.target, false); }
-  });
-  $('fReset').addEventListener('submit', async ev => {
-    ev.preventDefault();
-    const pw = $('rsPw').value;
-    if (strength(pw).w < 50) return authMsg('Das Passwort ist zu schwach: mindestens 10 Zeichen und zwei Zeichenarten.');
-    if (pw !== $('rsPw2').value) return authMsg('Die beiden Passwörter stimmen nicht überein.');
-    busy(ev.target, true);
-    try {
-      const r = await api('reset', { token: acct.resetToken, password: pw });
-      acct.resetToken = null; $('rsPw').value = ''; $('rsPw2').value = '';
-      await startAccount(r.user, r.token, true);
-      toast('Neues Passwort gespeichert. Du bist angemeldet.');
-    } catch(e){ authMsg(e.message); }
-    finally { busy(ev.target, false); }
-  });
-  $('authLocal').addEventListener('click', () => { LS.set('ruti-local-choice', '1'); startLocal(); });
-
-  // --- Sitzung starten / beenden ---
-  async function startAccount(user, token, remember){
-    acct.token = token; acct.user = user; tokSet(token, remember !== false);
-    LS.set('ruti-user', JSON.stringify(user)); LS.del('ruti-local-choice');
-    state.mode = 'account'; state.storageOk = true;
-    loadMeta(); applyAll(null); loadLocal();
-    showApp(); refreshAll(); updateAcctUI(); syncLabel();
-    try {
-      const r = await api('data_get', {});
-      acct.online = true;
-      if (r.data){
-        if (acct.dirty){ applyAll(mergeData(r.data, snapshot())); acct.version = r.version; cacheLocal(); refreshViews(); queueSync(); }
-        else { applyAll(r.data); acct.version = r.version; cacheLocal(); refreshAll(); }
-      } else {
-        acct.version = 0;
-        if (acct.dirty) queueSync();
-      }
-      saveMeta();
-    } catch(e){
-      if (e.code === 'offline' || e.code === 'bad_response') acct.online = false;
-      else if (e.status === 401) return sessionLost();
-      else toast(e.message);
-    }
-    syncLabel(); updateAcctUI();
-  }
-  function startLocal(note){
-    state.mode = 'local'; acct.user = null; acct.token = null;
-    applyAll(null); loadLocal(); showApp(); refreshAll(); updateAcctUI();
-    state.note = note || ''; render();
-  }
-  function endSession(){
-    if (acct.user){ LS.del('ruti-u-'+acct.user.id); LS.del('ruti-u-'+acct.user.id+'-meta'); }
-    tokSet(null); LS.del('ruti-user');
-    acct.token = null; acct.user = null; acct.version = 0; acct.dirty = false;
-    applyAll(null); state.mode = 'loading';
-    $('acctPanel').hidden = true;
-    showAuth('login');
-  }
-  function sessionLost(){ toast('Deine Anmeldung ist abgelaufen. Bitte melde dich erneut an.'); endSession(); }
-  async function logout(all){
-    if (acct.dirty){ await syncNow(); if (acct.dirty && !confirmUnsynced()) return; }
-    try { await api('logout', { all: !!all }); } catch(e){}
-    endSession();
-    toast(all ? 'Auf allen Geräten abgemeldet' : 'Abgemeldet');
-  }
-  let unsyncedOk = false;
-  function confirmUnsynced(){
-    if (unsyncedOk){ unsyncedOk = false; return true; }
-    unsyncedOk = true;
-    toast('Einige Änderungen sind noch nicht gespeichert (offline). Nochmal tippen, um trotzdem abzumelden.');
-    setTimeout(() => { unsyncedOk = false; }, 6000);
-    return false;
-  }
-
-  // --- Kopfzeile & Kontobereich ---
-  function updateAcctUI(){
-    const b = $('acctBtn');
-    b.hidden = !API;
-    if (!API) return;
-    b.innerHTML = '';
-    if (state.mode === 'account' && acct.user){
-      const av = document.createElement('span'); av.className = 'av'; av.textContent = (acct.user.name || acct.user.email).trim().charAt(0).toUpperCase();
-      const tx = document.createElement('span'); tx.textContent = acct.user.name || 'Konto';
-      b.append(av, tx); b.setAttribute('aria-label', 'Konto von '+acct.user.email);
-    } else { b.textContent = 'Anmelden'; b.setAttribute('aria-label', 'Anmelden oder registrieren'); }
-    // Hinweise im App-Bereich
-    const imp = $('importBanner');
-    const dev = localDevice();
-    const showImp = state.mode === 'account' && !!acct.user && hasContent(dev) && !LS.get('ruti-imported-'+acct.user.id);
-    imp.hidden = !showImp; $('acctImport').hidden = !showImp;
-    $('verifyBanner').hidden = !(state.mode === 'account' && acct.user && !acct.user.verified);
-    renderAcctInfo();
-  }
-  function localDevice(){ try { return JSON.parse(LS.get('ruti-data-v1') || 'null'); } catch(e){ return null; } }
-  function renderAcctInfo(){
-    const box = $('acctInfo'); box.innerHTML = '';
-    if (!acct.user) return;
-    const n = document.createElement('b'); n.textContent = acct.user.name || 'Ohne Namen';
-    const e = document.createElement('span'); e.textContent = acct.user.email;
-    const st = document.createElement('span'); st.className = 'st'+(acct.user.verified ? '' : ' warn');
-    st.textContent = acct.user.verified ? 'E-Mail-Adresse bestätigt' : 'E-Mail-Adresse noch nicht bestätigt';
-    box.append(n, e, st);
-    if (!acct.user.verified){
-      const rb = document.createElement('button'); rb.type = 'button'; rb.className = 'linkbtn'; rb.textContent = 'Bestätigungs-E-Mail erneut senden';
-      rb.addEventListener('click', resendVerify); box.appendChild(rb);
-    }
-    $('acName').value = acct.user.name || '';
-    $('chUser').value = $('deUser').value = acct.user.email;
-  }
-  async function resendVerify(){
-    try { const r = await api('resend_verify'); toast(r.message || (r.mailed ? 'E-Mail gesendet. Schau auch im Spam-Ordner nach.' : 'Die E-Mail konnte nicht gesendet werden.')); }
-    catch(e){ toast(e.message); }
-  }
-  $('acctBtn').addEventListener('click', () => {
-    if (state.mode === 'account'){ renderAcctInfo(); $('acctPanel').hidden = false; }
-    else showAuth('login');
-  });
-  $('acctClose').addEventListener('click', () => { $('acctPanel').hidden = true; });
-  $('acctPanel').addEventListener('click', ev => { if (ev.target === $('acctPanel')) $('acctPanel').hidden = true; });
-  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('acctPanel').hidden) $('acctPanel').hidden = true; });
-  $('btnLogout').addEventListener('click', () => logout(false));
-  $('btnLogoutAll').addEventListener('click', () => logout(true));
-  $('verifyResend').addEventListener('click', resendVerify);
-  function importDevice(){
-    const dev = localDevice(); if (!hasContent(dev)) return;
-    applyAll(hasContent(snapshot()) ? mergeData(snapshot(), dev) : dev);
-    LS.set('ruti-imported-'+acct.user.id, '1');
-    persist(); refreshAll(); updateAcctUI();
-    toast('Daten von diesem Gerät übernommen');
-  }
-  document.querySelectorAll('[data-import]').forEach(b => b.addEventListener('click', importDevice));
-  $('importSkip').addEventListener('click', () => { LS.set('ruti-imported-'+acct.user.id, '1'); updateAcctUI(); });
-
-  $('fAcctName').addEventListener('submit', async ev => {
-    ev.preventDefault();
-    try { const r = await api('update_profile', { name: $('acName').value.trim() }); acct.user = r.user; LS.set('ruti-user', JSON.stringify(r.user)); updateAcctUI(); toast('Name gespeichert'); }
-    catch(e){ toast(e.message); }
-  });
-  $('fChange').addEventListener('submit', async ev => {
-    ev.preventDefault();
-    const pw = $('chPw').value;
-    if (strength(pw).w < 50) return toast('Das neue Passwort ist zu schwach: mindestens 10 Zeichen und zwei Zeichenarten.');
-    if (pw !== $('chPw2').value) return toast('Die beiden neuen Passwörter stimmen nicht überein.');
-    busy(ev.target, true);
-    try { const r = await api('change_password', { current: $('chCur').value, password: pw }); ev.target.reset(); updateMeter($('chPw')); toast(r.message); }
-    catch(e){ toast(e.message); }
-    finally { busy(ev.target, false); }
-  });
-  $('fDelete').addEventListener('submit', async ev => {
-    ev.preventDefault();
-    busy(ev.target, true);
-    try { const r = await api('delete_account', { password: $('dePw').value }); ev.target.reset(); endSession(); toast(r.message); }
-    catch(e){ toast(e.message); }
-    finally { busy(ev.target, false); }
-  });
-
-  // --- Start ---
-  async function boot(){
-    const q = new URLSearchParams(location.search);
-    const resetTok = q.get('reset'), verifyTok = q.get('verify');
-    if (resetTok || verifyTok) history.replaceState(null, '', location.pathname + location.hash);
-    if (!API){ startLocal(); return; }
-    let reachable = true, configured = true;
-    try { await api('ping'); }
-    catch(e){ if (e.code === 'not_configured' || e.code === 'db_unavailable') configured = false; else reachable = false; }
-    if (!reachable || !configured){
-      const t = tokGet(), u = cachedUser();
-      if (t && u){ acct.token = t; acct.user = u; state.mode = 'account'; loadMeta(); applyAll(null); loadLocal(); acct.online = false; showApp(); refreshAll(); updateAcctUI(); syncLabel(); return; }
-      startLocal(configured ? 'Der Server ist gerade nicht erreichbar. Ruti speichert vorerst nur auf diesem Gerät.' : 'Der Server ist noch nicht eingerichtet. Ruti speichert vorerst nur auf diesem Gerät.');
-      return;
-    }
-    if (verifyTok){
-      try { const r = await api('verify', { token: verifyTok }); toast(r.message); const u = cachedUser(); if (u){ u.verified = true; LS.set('ruti-user', JSON.stringify(u)); } }
-      catch(e){ toast(e.message); }
-    }
-    if (resetTok){ acct.resetToken = resetTok; showAuth('reset'); return; }
-    const t = tokGet();
-    if (t){
-      acct.token = t;
-      try { const r = await api('me'); await startAccount(r.user, t, !!LS.get('ruti-token')); return; }
-      catch(e){ tokSet(null); acct.token = null; }
-    }
-    if (LS.get('ruti-local-choice') === '1'){ startLocal(); return; }
-    showAuth('login');
-  }
-
   /* ---------- Start ---------- */
   resetForm();
   render();
-  boot();
+  (async () => {
+    let db = null;
+    try { if (window.claude && window.claude.use) db = await window.claude.use('db'); } catch(e){ db = null; }
+    if (!db){ loadLocal(); state.mode = 'local'; initSmokeForms(); initExpForms(); render(); renderSmoke(); renderExp(); return; }
+    state.db = db;
+    let gotR = false, gotC = false;
+    const ready = () => { if (gotR && gotC && state.mode !== 'live'){ state.mode = 'live'; } render(); };
+    db.collection('routines').onSnapshot(snap => {
+      state.routines = snap.docs.filter(d => d.exists).map(d => Object.assign({ id: d.id }, d.data()))
+        .filter(r => r.name && r.start)
+        .sort((a,b) => (a.order||0) - (b.order||0));
+      gotR = true; ready();
+    }, e => { toast('Verbindung zur Datenbank unterbrochen. Seite neu laden.'); });
+    db.collection('checks').onSnapshot(snap => {
+      const seen = {};
+      snap.docs.forEach(d => { seen[d.id] = true; if (!writing[d.id] && !dirty[d.id]) state.months[d.id] = clone(d.data()); });
+      Object.keys(state.months).forEach(k => { if (!seen[k] && !writing[k] && !dirty[k]) delete state.months[k]; });
+      gotC = true; ready();
+    }, e => { toast('Verbindung zur Datenbank unterbrochen. Seite neu laden.'); });
+  })();
 })();
 </script>
