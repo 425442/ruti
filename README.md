@@ -15,7 +15,7 @@ Persönliche App zum Festhalten und Bewerten täglicher Routinen – nutzbar am 
 - Routinen anlegen, beschreiben, bearbeiten und löschen (Papierkorb direkt auf der Karte oder unter „Routinen verwalten“).
 - Pro Tag je Routine „Erledigt“ oder „Nicht erledigt“ markieren; vergangene Tage lassen sich über die Pfeile oder den 30-Tage-Balken nachtragen.
 - **Wertigkeit mit Sternen:** 1 ★ = 10 Punkte, 2 ★ = 12,5, 3 ★ = 15, 4 ★ = 17,5, 5 ★ = 20 Punkte je erledigtem Tag. Sterne im Formular oder direkt auf der Karte antippen.
-- **Zuverlässigkeit** = erledigte ÷ fällige Aufgaben, inklusive heute. Offene Routinen zählen sofort als nicht erledigt (4 Routinen, 1 erledigt → 25 %).
+- **Zuverlässigkeit** = erreichte ÷ mögliche Punkte, inklusive heute – also nach Sternen gewichtet. Offene Routinen zählen sofort als nicht erledigt (5 ★ erledigt + 1 ★ offen → 20 von 30 Punkten = 67 %).
 - Serie (Tage am Stück) und die letzten 14 Tage je Routine.
 - Reihenfolge per Drag and Drop: Karte ziehen, am Handy kurz gedrückt halten und dann ziehen.
 

@@ -367,7 +367,7 @@ select:focus{outline:none;border-color:var(--accent)}
     <div id="banner"></div>
     <div class="summary">
       <div class="stat"><div class="lbl">Punkte gesamt</div><div class="val" id="sPoints">0</div><div class="sub" id="sPointsSub">10 Punkte je erledigter Routine</div></div>
-      <div class="stat"><div class="lbl">Zuverlässigkeit</div><div class="val" id="sPct">–</div><div class="sub" id="sPctSub">erledigt von fälligen Aufgaben</div></div>
+      <div class="stat"><div class="lbl">Zuverlässigkeit</div><div class="val" id="sPct">–</div><div class="sub" id="sPctSub">erreichte von möglichen Punkten</div></div>
       <div class="stat"><div class="lbl" id="sDayLbl">Heute</div><div class="val" id="sDay">0 / 0</div><div class="sub" id="sDaySub">Routinen erledigt</div></div>
       <div class="stat wide">
         <div class="lbl">Letzte 30 Tage</div>
@@ -388,7 +388,7 @@ select:focus{outline:none;border-color:var(--accent)}
           </div>
         </div>
         <ul class="list" id="checkList"></ul>
-        <p class="note">Die Zuverlässigkeit zeigt den aktuellen Stand: Jede noch offene Routine – auch heute – zählt als nicht erledigt, bis du sie abhakst. Reihenfolge ändern: Karte ziehen – am Handy kurz gedrückt halten, dann ziehen.</p>
+        <p class="note">Die Zuverlässigkeit zeigt den aktuellen Stand, gewichtet nach Sternen: erreichte ÷ mögliche Punkte. Jede noch offene Routine – auch heute – zählt als nicht erledigt, bis du sie abhakst. Reihenfolge ändern: Karte ziehen – am Handy kurz gedrückt halten, dann ziehen.</p>
       </div>
 
       <aside class="panel" aria-labelledby="mTitle">
@@ -675,13 +675,14 @@ select:focus{outline:none;border-color:var(--accent)}
     $('backup').hidden = state.mode !== 'local';
 
     // Summary
-    let done = 0, counted = 0, points = 0;
+    let done = 0, counted = 0, points = 0, possible = 0;
     const stats = {};
-    state.routines.forEach(r => { const s = statsFor(r); stats[r.id] = s; done += s.done; counted += s.counted; points += s.points; });
+    state.routines.forEach(r => { const s = statsFor(r); stats[r.id] = s; done += s.done; counted += s.counted; points += s.points; possible += s.counted * pointsFor(r); });
     $('sPoints').textContent = fmtNum(points);
     $('sPointsSub').textContent = fmtNum(done)+(done === 1 ? ' erledigte Routine' : ' erledigte Routinen')+' · 10–20 Punkte je nach Sternen';
-    $('sPct').textContent = counted ? Math.round(done/counted*100)+' %' : '–';
-    $('sPctSub').textContent = counted ? fmtNum(done)+' von '+fmtNum(counted)+' fälligen Aufgaben' : 'noch keine fälligen Aufgaben';
+    // Gewichtet nach Sternen: erreichte Punkte ÷ mögliche Punkte
+    $('sPct').textContent = possible ? Math.round(points/possible*100)+' %' : '–';
+    $('sPctSub').textContent = possible ? fmtNum(points)+' von '+fmtNum(possible)+' möglichen Punkten · nach Sternen gewichtet' : 'noch keine fälligen Aufgaben';
     const act = activeOn(state.sel);
     const dayDone = act.filter(r => status(state.sel, r.id) === true).length;
     $('sDayLbl').textContent = state.sel === t ? 'Heute' : fmtShort(state.sel);
@@ -700,7 +701,8 @@ select:focus{outline:none;border-color:var(--accent)}
       const b = document.createElement('button');
       const n = a.filter(r => status(d, r.id) === true).length;
       const miss = a.filter(r => status(d, r.id) === false || (d < t && status(d, r.id) === null)).length;
-      const ratio = a.length ? n/a.length : 0;
+      const wMax = a.reduce((x,r) => x + pointsFor(r), 0);
+      const ratio = wMax ? a.filter(r => status(d, r.id) === true).reduce((x,r) => x + pointsFor(r), 0) / wMax : 0;
       b.style.height = a.length ? Math.max(8, Math.round(ratio*100))+'%' : '8%';
       b.style.background = !a.length ? 'var(--empty)' : n === 0 ? (miss ? 'var(--miss-soft)' : 'var(--empty)') : ratio === 1 ? 'var(--done)' : 'color-mix(in srgb, var(--done) 55%, var(--empty))';
       if (d === state.sel) b.classList.add('sel');
