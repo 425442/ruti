@@ -12,6 +12,7 @@ Persönliche App zum Festhalten und Bewerten täglicher Routinen – nutzbar am 
 
 ## Routinen
 
+- Zwei Arten: **Einfache Routine** (eine Aufgabe pro Tag) oder **Ritual** (eine Reihe von Schritten, jeder Schritt wird einzeln abgehakt und bepunktet). Beim Anlegen fragt die App nach der Art.
 - Routinen anlegen, beschreiben, bearbeiten und löschen (Papierkorb direkt auf der Karte oder unter „Routinen verwalten“).
 - Pro Tag je Routine „Erledigt“ oder „Nicht erledigt“ markieren; vergangene Tage lassen sich über die Pfeile oder den 30-Tage-Balken nachtragen.
 - **Wertigkeit mit Sternen:** 1 ★ = 10 Punkte, 2 ★ = 12,5, 3 ★ = 15, 4 ★ = 17,5, 5 ★ = 20 Punkte je erledigtem Tag. Sterne im Formular oder direkt auf der Karte antippen.

@@ -323,6 +323,36 @@ select:focus{outline:none;border-color:var(--accent)}
 .starfield .star{font-size:26px;padding:2px 3px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .star.on{color:#F2B92E}}
 :root[data-theme="dark"] .star.on{color:#F2B92E}
+.typechoice{display:grid;grid-template-columns:1fr;gap:8px;margin-top:6px}
+.typeopt{border:1.5px solid var(--line);background:var(--surface-2);border-radius:12px;padding:12px 14px;text-align:left;display:flex;flex-direction:column;gap:3px}
+.typeopt b{font-size:15.5px}
+.typeopt span{font-size:13px;color:var(--muted);font-weight:500}
+.typeopt:hover{border-color:var(--accent);background:var(--accent-soft)}
+.formbody{display:flex;flex-direction:column;gap:10px}
+.typechip{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--accent-soft);color:var(--accent);border-radius:10px;padding:6px 6px 6px 12px;font-weight:700;font-size:13.5px}
+.stepsbox{display:flex;flex-direction:column;gap:6px}
+.steplist-edit{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;counter-reset:st}
+.steplist-edit li{display:flex;gap:4px;align-items:center;counter-increment:st}
+.steplist-edit li::before{content:counter(st);width:20px;font-size:12px;font-weight:700;color:var(--muted);text-align:center;flex:none}
+.steplist-edit li.noteli{font-size:13px;color:var(--muted)}
+.steplist-edit li.noteli::before{content:none}
+.steplist-edit input{flex:1;min-width:0}
+.steplist-edit .iconbtn{width:32px;height:32px;flex:none;font-weight:700}
+.badge{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 8px}
+.steps{list-style:none;margin:8px 0 2px;padding:0;display:flex;flex-direction:column;gap:4px}
+.step{width:100%;display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);background:var(--surface-2);border-radius:10px;padding:8px 10px;text-align:left;font-weight:600;font-size:14.5px}
+.step .box{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);display:grid;place-items:center;flex:none;background:var(--surface)}
+.step .box svg{width:14px;height:14px}
+.step .snm{flex:1;min-width:0;overflow-wrap:anywhere}
+.step .spts{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.step.on{border-color:var(--done);background:var(--done-soft)}
+.step.on .box{background:var(--done);border-color:var(--done);color:#fff}
+.step.on .snm{color:var(--ink)}
+.step.on .spts{color:var(--done);font-weight:700}
+.ringmark{width:36px;height:36px;font-size:11px;font-weight:700;color:var(--ink);border:0;background:radial-gradient(circle, var(--surface) 0 58%, transparent 60%),conic-gradient(var(--done) var(--p,0%), var(--empty) 0);font-variant-numeric:tabular-nums}
+.check.ritual[data-s="part"] .ringmark{border-color:var(--done)}
+.check.ritual[data-s="done"] .mark{background:var(--done);border-color:var(--done);color:#fff}
+.dots span.p{background:color-mix(in srgb, var(--done) 45%, var(--empty))}
 /* Placeholder tabs */
 .soon{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:28px 22px;margin-top:14px;max-width:620px}
 .soon h2{font-size:24px;margin-bottom:8px}
@@ -386,12 +416,30 @@ select:focus{outline:none;border-color:var(--accent)}
         <h2 id="mTitle">Routinen verwalten</h2>
         <form id="rForm" autocomplete="off">
           <div class="editing" id="editHint" hidden></div>
+          <div class="typeask" id="typeAsk">
+            <div class="fieldlbl">Was möchtest du anlegen?</div>
+            <div class="typechoice">
+              <button type="button" class="typeopt" data-type="simple"><b>Einfache Routine</b><span>Eine Aufgabe pro Tag, z. B. 20 Minuten lesen</span></button>
+              <button type="button" class="typeopt" data-type="ritual"><b>Ritual</b><span>Eine Reihe von Schritten, z. B. Morgenritual: Wasser trinken, Dehnen, Tag planen</span></button>
+            </div>
+          </div>
+          <div class="formbody" id="formBody" hidden>
+          <div class="typechip" id="typeChip"><span id="typeChipText"></span><button type="button" class="small" id="typeChange">Art ändern</button></div>
           <label for="fName">Name
-            <input type="text" id="fName" maxlength="80" placeholder="z. B. 30 Minuten Bewegung" required>
+            <input type="text" id="fName" maxlength="80" placeholder="z. B. 30 Minuten Bewegung">
           </label>
           <label for="fDesc">Beschreibung
             <textarea id="fDesc" maxlength="300" placeholder="Was genau zählt als erledigt?"></textarea>
           </label>
+          <div class="stepsbox" id="stepsBox" hidden>
+            <div class="fieldlbl">Schritte des Rituals</div>
+            <ol class="steplist-edit" id="stepEdit"></ol>
+            <div class="inline-add">
+              <label for="stepName" class="sr">Neuer Schritt</label>
+              <input type="text" id="stepName" maxlength="80" placeholder="Neuer Schritt, z. B. Glas Wasser trinken">
+              <button class="btn ghost" type="button" id="stepAdd">Hinzufügen</button>
+            </div>
+          </div>
           <div class="fieldlbl" id="fStarsLbl">Wertigkeit</div>
           <div class="starfield">
             <div id="fStars"></div>
@@ -403,6 +451,7 @@ select:focus{outline:none;border-color:var(--accent)}
           <div class="row">
             <button class="btn" type="submit" id="fSubmit">Routine anlegen</button>
             <button class="btn ghost" type="button" id="fCancel" hidden>Abbrechen</button>
+          </div>
           </div>
         </form>
         <ul class="mlist" id="manageList"></ul>
@@ -631,21 +680,34 @@ select:focus{outline:none;border-color:var(--accent)}
     const v = m && m.days && m.days[date] ? m.days[date][rid] : undefined;
     return v === true ? true : v === false ? false : null;
   }
+  const isRitual = r => r && r.type === 'ritual';
+  // Aufgaben einer Routine an einem Tag: einfache Routine = 1, Ritual = aktive Schritte
+  function units(r, d){
+    if (d < r.start) return [];
+    if (!isRitual(r)) return [r.id];
+    return (r.steps || []).filter(st => (st.start || r.start) <= d).map(st => r.id+':'+st.id);
+  }
+  function dayState(r, d){
+    const u = units(r, d); if (!u.length) return { n:0, done:0, miss:0 };
+    const v = u.map(k => status(d, k));
+    return { n: u.length, done: v.filter(x => x === true).length, miss: v.filter(x => x === false).length };
+  }
   function statsFor(r){
     const t = today();
     let done = 0, counted = 0;
     if (r.start <= t){
       for (let d = r.start; d <= t; d = addDays(d,1)){
-        const s = status(d, r.id);
-        counted++; if (s === true) done++;
+        const ds = dayState(r, d);
+        counted += ds.n; done += ds.done;
       }
     }
+    const full = d => { const ds = dayState(r, d); return ds.n > 0 && ds.done === ds.n; };
     let streak = 0, c = t;
-    if (status(c, r.id) !== true) c = addDays(c,-1);
-    while (c >= r.start && status(c, r.id) === true){ streak++; c = addDays(c,-1); }
+    if (!full(c)) c = addDays(c,-1);
+    while (c >= r.start && full(c)){ streak++; c = addDays(c,-1); }
     return { done, counted, points: done*pointsFor(r), pct: counted ? Math.round(done/counted*100) : null, streak };
   }
-  const activeOn = d => state.routines.filter(r => r.start <= d);
+  const activeOn = d => state.routines.filter(r => units(r, d).length > 0);
 
   /* ---------- Rendern ---------- */
   function render(){
@@ -666,16 +728,15 @@ select:focus{outline:none;border-color:var(--accent)}
     const stats = {};
     state.routines.forEach(r => { const s = statsFor(r); stats[r.id] = s; done += s.done; counted += s.counted; points += s.points; possible += s.counted * pointsFor(r); });
     $('sPoints').textContent = fmtNum(points);
-    $('sPointsSub').textContent = fmtNum(done)+(done === 1 ? ' erledigte Routine' : ' erledigte Routinen')+' · 10–20 Punkte je nach Sternen';
+    $('sPointsSub').textContent = fmtNum(done)+(done === 1 ? ' erledigte Aufgabe' : ' erledigte Aufgaben')+' · 10–20 Punkte je nach Sternen';
     // Gewichtet nach Sternen: erreichte Punkte ÷ mögliche Punkte
     $('sPct').textContent = possible ? Math.round(points/possible*100)+' %' : '–';
     $('sPctSub').textContent = possible ? fmtNum(points)+' von '+fmtNum(possible)+' möglichen Punkten · nach Sternen gewichtet' : 'noch keine fälligen Aufgaben';
     const act = activeOn(state.sel);
-    const dayDone = act.filter(r => status(state.sel, r.id) === true).length;
+    let dayDone = 0, dayN = 0, dayPts = 0, dayMax = 0;
+    act.forEach(r => { const ds = dayState(r, state.sel); dayDone += ds.done; dayN += ds.n; dayPts += ds.done*pointsFor(r); dayMax += ds.n*pointsFor(r); });
     $('sDayLbl').textContent = state.sel === t ? 'Heute' : fmtShort(state.sel);
-    $('sDay').textContent = dayDone+' / '+act.length;
-    const dayPts = act.filter(r => status(state.sel, r.id) === true).reduce((a,r) => a + pointsFor(r), 0);
-    const dayMax = act.reduce((a,r) => a + pointsFor(r), 0);
+    $('sDay').textContent = dayDone+' / '+dayN;
     $('sDaySub').textContent = '+'+fmtNum(dayPts)+' von '+fmtNum(dayMax)+' möglichen Punkten';
 
     // 30-Tage-Streifen
@@ -686,14 +747,14 @@ select:focus{outline:none;border-color:var(--accent)}
       const d = addDays(start,i);
       const a = activeOn(d);
       const b = document.createElement('button');
-      const n = a.filter(r => status(d, r.id) === true).length;
-      const miss = a.filter(r => status(d, r.id) === false || (d < t && status(d, r.id) === null)).length;
-      const wMax = a.reduce((x,r) => x + pointsFor(r), 0);
-      const ratio = wMax ? a.filter(r => status(d, r.id) === true).reduce((x,r) => x + pointsFor(r), 0) / wMax : 0;
+      let n = 0, nAll = 0, wDone = 0, wMax = 0;
+      a.forEach(r => { const ds = dayState(r, d); n += ds.done; nAll += ds.n; wDone += ds.done*pointsFor(r); wMax += ds.n*pointsFor(r); });
+      const miss = nAll - n;
+      const ratio = wMax ? wDone / wMax : 0;
       b.style.height = a.length ? Math.max(8, Math.round(ratio*100))+'%' : '8%';
       b.style.background = !a.length ? 'var(--empty)' : n === 0 ? (miss ? 'var(--miss-soft)' : 'var(--empty)') : ratio === 1 ? 'var(--done)' : 'color-mix(in srgb, var(--done) 55%, var(--empty))';
       if (d === state.sel) b.classList.add('sel');
-      b.title = fmtShort(d)+': '+n+' von '+a.length+' erledigt';
+      b.title = fmtShort(d)+': '+n+' von '+nAll+' Aufgaben erledigt';
       b.setAttribute('aria-label', b.title);
       b.addEventListener('click', () => { state.sel = d; render(); });
       strip.appendChild(b);
@@ -718,7 +779,7 @@ select:focus{outline:none;border-color:var(--accent)}
     } else if (!act.length){
       list.innerHTML = '<li class="empty"><p>An diesem Tag war noch keine Routine aktiv.</p></li>';
     } else {
-      act.forEach(r => list.appendChild(checkItem(r, stats[r.id])));
+      act.forEach(r => list.appendChild(isRitual(r) ? ritualItem(r, stats[r.id]) : checkItem(r, stats[r.id])));
     }
 
     renderManage();
@@ -781,6 +842,74 @@ select:focus{outline:none;border-color:var(--accent)}
     return li;
   }
 
+  function ritualItem(r, s){
+    const d0 = state.sel, t = today();
+    const ds = dayState(r, d0);
+    const li = document.createElement('li');
+    li.className = 'check ritual';
+    li.dataset.id = r.id;
+    li.dataset.s = ds.n && ds.done === ds.n ? 'done' : ds.done ? 'part' : 'open';
+
+    const mark = document.createElement('div'); mark.className = 'mark ringmark'; mark.setAttribute('aria-hidden','true');
+    if (li.dataset.s === 'done') mark.innerHTML = ICON_OK;
+    else { mark.textContent = ds.done+'/'+ds.n; mark.style.setProperty('--p', (ds.n ? ds.done/ds.n*100 : 0)+'%'); }
+
+    const info = document.createElement('div');
+    const nrow = document.createElement('div'); nrow.className = 'namerow';
+    const name = document.createElement('div'); name.className = 'name'; name.textContent = r.name;
+    const badge = document.createElement('span'); badge.className = 'badge'; badge.textContent = 'Ritual';
+    const sw = starsWidget(starsOf(r), n => setStars(r, n), 'Wertigkeit von '+r.name);
+    const pts = document.createElement('span'); pts.className = 'starpts'; pts.textContent = fmtNum(pointsFor(r))+' P. je Schritt';
+    nrow.append(name, badge, sw, pts);
+    info.appendChild(nrow);
+    if (r.desc){ const d = document.createElement('div'); d.className = 'desc'; d.textContent = r.desc; info.appendChild(d); }
+
+    const steps = document.createElement('ol'); steps.className = 'steps';
+    (r.steps || []).filter(st => (st.start || r.start) <= d0).forEach((st, i) => {
+      const key = r.id+':'+st.id, v = status(d0, key);
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'step'+(v === true ? ' on' : '');
+      b.setAttribute('aria-pressed', v === true ? 'true' : 'false');
+      const box = document.createElement('span'); box.className = 'box'; box.innerHTML = v === true ? ICON_OK : '';
+      const nm = document.createElement('span'); nm.className = 'snm'; nm.textContent = st.name;
+      const sp = document.createElement('span'); sp.className = 'spts'; sp.textContent = v === true ? '+'+fmtNum(pointsFor(r)) : fmtNum(pointsFor(r));
+      b.append(box, nm, sp);
+      b.addEventListener('click', () => setStatus(d0, key, v === true ? null : true));
+      const liS = document.createElement('li'); liS.appendChild(b); steps.appendChild(liS);
+    });
+    info.appendChild(steps);
+
+    const meta = document.createElement('div'); meta.className = 'meta';
+    meta.innerHTML = '<span><b>'+ds.done+' von '+ds.n+'</b> Schritten</span><span><b>'+fmtNum(s.points)+'</b> Punkte</span><span><b>'+(s.pct === null ? '–' : s.pct+' %')+'</b> zuverlässig</span><span>Serie <b>'+s.streak+'</b> '+(s.streak === 1 ? 'Tag' : 'Tage')+' komplett</span>';
+    info.appendChild(meta);
+    const dots = document.createElement('div'); dots.className = 'dots'; dots.setAttribute('aria-hidden','true');
+    for (let i = 13; i >= 0; i--){
+      const d = addDays(d0, -i);
+      const sp = document.createElement('span');
+      const x = dayState(r, d);
+      if (!x.n) sp.className = 'x';
+      else if (x.done === x.n) sp.className = 'd';
+      else if (x.done > 0) sp.className = 'p';
+      else if (d < t || x.miss) sp.className = 'm';
+      if (i === 0) sp.classList.add('cur');
+      dots.appendChild(sp);
+    }
+    info.appendChild(dots);
+
+    const actions = document.createElement('div'); actions.className = 'actions';
+    const all = ds.n > 0 && ds.done === ds.n;
+    const yes = document.createElement('button'); yes.className = 'pill yes'; yes.innerHTML = ICON_OK+(all ? 'Alle erledigt' : 'Alle abhaken');
+    yes.setAttribute('aria-pressed', all ? 'true' : 'false');
+    yes.addEventListener('click', () => setMany(d0, units(r, d0), all ? null : true));
+    const del = document.createElement('button'); del.type = 'button'; del.className = 'iconbtn cardDel';
+    del.innerHTML = ICON_TRASH; del.title = 'Ritual löschen'; del.setAttribute('aria-label', r.name+' löschen');
+    del.addEventListener('click', () => { state.confirmDel = state.confirmDel === r.id ? null : r.id; render(); });
+    actions.append(yes, del);
+
+    li.append(makeHandle(r.name), mark, info, actions);
+    if (state.confirmDel === r.id) li.appendChild(deleteConfirm(r));
+    return li;
+  }
+
   function deleteConfirm(r){
     const c = document.createElement('div'); c.className = 'confirm';
     const p = document.createElement('div'); p.textContent = '„'+r.name+'“ löschen? Die Punkte dieser Routine fallen aus der Gesamtwertung.';
@@ -800,7 +929,7 @@ select:focus{outline:none;border-color:var(--accent)}
       const row = document.createElement('div'); row.className = 'mrow';
       const t = document.createElement('div'); t.className = 't';
       const a = document.createElement('div'); a.textContent = r.name;
-      const b = document.createElement('div'); b.textContent = '★'.repeat(starsOf(r))+' · '+fmtNum(pointsFor(r))+' Punkte · zählt ab '+parse(r.start).toLocaleDateString('de-DE');
+      const b = document.createElement('div'); b.textContent = (isRitual(r) ? 'Ritual · '+(r.steps || []).length+' Schritte · ' : '')+'★'.repeat(starsOf(r))+' · '+fmtNum(pointsFor(r))+(isRitual(r) ? ' P. je Schritt' : ' Punkte')+' · zählt ab '+parse(r.start).toLocaleDateString('de-DE');
       t.append(a,b);
       const ed = document.createElement('button'); ed.className = 'small'; ed.textContent = 'Bearbeiten';
       ed.addEventListener('click', () => startEdit(r));
@@ -828,6 +957,18 @@ select:focus{outline:none;border-color:var(--accent)}
     const next = clone(state.months[mk]); next.days = next.days || {};
     const day = next.days[date] || {};
     if (val === null) delete day[rid]; else day[rid] = val;
+    if (Object.keys(day).length) next.days[date] = day; else delete next.days[date];
+    state.months[mk] = next;
+    render();
+    if (state.db){ dirty[mk] = true; if (!writing[mk]) flush(mk); }
+    else persist();
+  }
+
+  function setMany(date, keys, val){
+    const mk = date.slice(0,7);
+    const next = clone(state.months[mk]); next.days = next.days || {};
+    const day = next.days[date] || {};
+    keys.forEach(k => { if (val === null) delete day[k]; else day[k] = val; });
     if (Object.keys(day).length) next.days[date] = day; else delete next.days[date];
     state.months[mk] = next;
     render();
@@ -1016,7 +1157,7 @@ select:focus{outline:none;border-color:var(--accent)}
       animation: 160,
       delay: 220, delayOnTouchOnly: true, touchStartThreshold: 8,
       forceFallback: true, fallbackTolerance: 4,
-      filter: '.pill, .small, .btn, .iconbtn, .confirm, .star, input, textarea',
+      filter: '.pill, .small, .btn, .iconbtn, .confirm, .star, .step, input, textarea',
       preventOnFilter: false,
       ghostClass: 'drag-ghost', chosenClass: 'drag-chosen', fallbackClass: 'drag-float',
       scroll: true, scrollSensitivity: 80, scrollSpeed: 14, bubbleScroll: true,
@@ -1043,31 +1184,90 @@ select:focus{outline:none;border-color:var(--accent)}
     if (!state.db){ r.stars = n; persist(); render(); toast(r.name+': '+n+(n === 1 ? ' Stern' : ' Sterne')+' · '+fmtNum(pointsForStars(n))+' Punkte'); return; }
     try { await state.db.doc('routines/'+r.id).update({ stars: n }); } catch(e){ toast(errMsg(e)); }
   }
+  let formType = null, formSteps = [];
+  const stepId = () => 's'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  function setFormType(tp){
+    formType = tp;
+    $('typeAsk').hidden = !!tp;
+    $('formBody').hidden = !tp;
+    if (!tp) return;
+    const rit = tp === 'ritual';
+    $('stepsBox').hidden = !rit;
+    $('typeChipText').textContent = rit ? 'Ritual – eine Reihe von Schritten' : 'Einfache Routine';
+    $('typeChange').hidden = !!state.editId;
+    $('fName').placeholder = rit ? 'z. B. Morgenritual' : 'z. B. 30 Minuten Bewegung';
+    $('fStarsLbl').textContent = rit ? 'Wertigkeit (gilt für jeden Schritt)' : 'Wertigkeit';
+    if (!state.editId) $('fSubmit').textContent = rit ? 'Ritual anlegen' : 'Routine anlegen';
+    renderStepEdit();
+  }
+  function renderStepEdit(){
+    const ol = $('stepEdit'); ol.innerHTML = '';
+    if (!formSteps.length){ const li = document.createElement('li'); li.className = 'noteli'; li.textContent = 'Noch keine Schritte. Füge unten den ersten hinzu.'; ol.appendChild(li); return; }
+    formSteps.forEach((st, i) => {
+      const li = document.createElement('li');
+      const inp = document.createElement('input'); inp.type = 'text'; inp.value = st.name; inp.maxLength = 80; inp.id = 'step-'+st.id;
+      inp.setAttribute('aria-label', 'Schritt '+(i+1));
+      inp.addEventListener('input', () => { st.name = inp.value; });
+      inp.addEventListener('keydown', ev => { if (ev.key === 'Enter') ev.preventDefault(); });
+      const up = document.createElement('button'); up.type = 'button'; up.className = 'iconbtn'; up.textContent = '↑'; up.disabled = i === 0; up.setAttribute('aria-label', 'Nach oben');
+      up.addEventListener('click', () => { [formSteps[i-1], formSteps[i]] = [formSteps[i], formSteps[i-1]]; renderStepEdit(); });
+      const dn = document.createElement('button'); dn.type = 'button'; dn.className = 'iconbtn'; dn.textContent = '↓'; dn.disabled = i === formSteps.length-1; dn.setAttribute('aria-label', 'Nach unten');
+      dn.addEventListener('click', () => { [formSteps[i+1], formSteps[i]] = [formSteps[i], formSteps[i+1]]; renderStepEdit(); });
+      const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'iconbtn del'; rm.innerHTML = ICON_TRASH; rm.setAttribute('aria-label', 'Schritt entfernen');
+      rm.addEventListener('click', () => { formSteps.splice(i,1); renderStepEdit(); });
+      li.append(inp, up, dn, rm); ol.appendChild(li);
+    });
+  }
+  function addStepFromInput(){
+    const v = $('stepName').value.trim(); if (!v){ $('stepName').focus(); return; }
+    formSteps.push({ id: stepId(), name: v, isNew: true });
+    $('stepName').value = ''; renderStepEdit(); $('stepName').focus();
+  }
+  $('stepAdd').addEventListener('click', addStepFromInput);
+  $('stepName').addEventListener('keydown', ev => { if (ev.key === 'Enter'){ ev.preventDefault(); addStepFromInput(); } });
+  document.querySelectorAll('.typeopt').forEach(b => b.addEventListener('click', () => { setFormType(b.dataset.type); $('fName').focus(); }));
+  $('typeChange').addEventListener('click', () => setFormType(null));
+
   function resetForm(){
     formStars = 1; renderFormStars();
-    state.editId = null;
-    $('fName').value = ''; $('fDesc').value = ''; $('fStart').value = today();
+    state.editId = null; formSteps = [];
+    $('fName').value = ''; $('fDesc').value = ''; $('fStart').value = today(); $('stepName').value = '';
     $('fSubmit').textContent = 'Routine anlegen';
     $('fCancel').hidden = true; $('editHint').hidden = true;
+    setFormType(null);
   }
   function startEdit(r){
     state.editId = r.id;
     $('fName').value = r.name; $('fDesc').value = r.desc || ''; $('fStart').value = r.start;
     formStars = starsOf(r); renderFormStars();
+    formSteps = (r.steps || []).map(st => Object.assign({}, st));
+    setFormType(isRitual(r) ? 'ritual' : 'simple');
     $('fSubmit').textContent = 'Änderungen speichern';
     $('fCancel').hidden = false; $('editHint').hidden = false;
     $('editHint').textContent = 'Du bearbeitest: '+r.name;
-    $('fName').focus();
+    $('rForm').scrollIntoView({ behavior:'smooth', block:'start' });
+    $('fName').focus({ preventScroll:true });
   }
   $('rForm').addEventListener('submit', async e => {
     e.preventDefault();
+    if (!formType) return;
     const name = $('fName').value.trim();
-    if (!name){ $('fName').focus(); return; }
-    const data = { name, desc: $('fDesc').value.trim(), start: $('fStart').value || today(), stars: formStars };
+    if (!name){ toast('Bitte einen Namen eingeben.'); $('fName').focus(); return; }
+    const start = $('fStart').value || today();
+    const data = { name, desc: $('fDesc').value.trim(), start, stars: formStars, type: formType };
+    if (formType === 'ritual'){
+      if ($('stepName').value.trim()) addStepFromInput();
+      const steps = formSteps.map(st => ({ id: st.id, name: st.name.trim(), start: st.start })).filter(st => st.name);
+      if (!steps.length){ toast('Ein Ritual braucht mindestens einen Schritt.'); $('stepName').focus(); return; }
+      const t = today();
+      // Neue Schritte in einem bestehenden Ritual zählen ab heute, damit alte Tage nicht nachträglich als verpasst gelten
+      steps.forEach(st => { const f = formSteps.find(x => x.id === st.id); if (state.editId && f && f.isNew) st.start = t > start ? t : start; if (!st.start) delete st.start; });
+      data.steps = steps;
+    }
     const id = state.editId;
     resetForm();
     await saveRoutine(data, id);
-    toast(id ? 'Routine gespeichert' : 'Routine angelegt');
+    toast(id ? 'Gespeichert' : (data.type === 'ritual' ? 'Ritual angelegt' : 'Routine angelegt'));
   });
   $('fCancel').addEventListener('click', resetForm);
 
