@@ -402,6 +402,15 @@ select:focus{outline:none;border-color:var(--accent)}
 .wd.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .wdpresets{display:flex;gap:4px;flex-wrap:wrap;margin-top:-6px}
 .offday{font-size:12.5px;color:var(--muted);margin:8px 2px 0}
+.stars.sm .star{font-size:14px;padding:2px 0}
+.smid{flex:1;min-width:0;display:flex;align-items:center;flex-wrap:wrap;gap:0 8px}
+.smid .sname{flex:1 1 120px}
+.spts2{font-size:11.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;min-width:28px;text-align:right}
+.srow[data-s="done"] .spts2{color:var(--done)}
+.se-wrap{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.se-top{display:flex;gap:4px;align-items:center}
+.se-top input{flex:1;min-width:0}
+.se-bot{display:flex;align-items:center;gap:8px;padding-left:2px}
 /* Placeholder tabs */
 .soon{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:28px 22px;margin-top:14px;max-width:620px}
 .soon h2{font-size:24px;margin-bottom:8px}
@@ -755,18 +764,27 @@ select:focus{outline:none;border-color:var(--accent)}
     if (!isRitual(r)) return [r.id];
     return (r.steps || []).filter(st => (st.start || r.start) <= d).map(st => r.id+':'+st.id);
   }
+  // Sterne je Schritt (ältere Rituale ohne Schritt-Sterne übernehmen die Sterne des Rituals)
+  const stepStars = (r, st) => Math.min(5, Math.max(1, Math.round(Number(st && st.stars) || starsOf(r))));
+  function unitPts(r, key){
+    if (!isRitual(r)) return pointsFor(r);
+    const sid = key.slice(r.id.length + 1);
+    return pointsForStars(stepStars(r, (r.steps || []).find(x => x.id === sid)));
+  }
+  const ritualMax = r => (r.steps || []).reduce((a, st) => a + pointsForStars(stepStars(r, st)), 0);
   function dayState(r, d){
-    const u = units(r, d); if (!u.length) return { n:0, done:0, miss:0 };
-    const v = u.map(k => status(d, k));
-    return { n: u.length, done: v.filter(x => x === true).length, miss: v.filter(x => x === false).length };
+    const u = units(r, d); if (!u.length) return { n:0, done:0, miss:0, wDone:0, wMax:0 };
+    let done = 0, miss = 0, wDone = 0, wMax = 0;
+    u.forEach(k => { const v = status(d, k), w = unitPts(r, k); wMax += w; if (v === true){ done++; wDone += w; } else if (v === false) miss++; });
+    return { n: u.length, done, miss, wDone, wMax };
   }
   function statsFor(r){
     const t = today();
-    let done = 0, counted = 0;
+    let done = 0, counted = 0, wDone = 0, wMax = 0;
     if (r.start <= t){
       for (let d = r.start; d <= t; d = addDays(d,1)){
         const ds = dayState(r, d);
-        counted += ds.n; done += ds.done;
+        counted += ds.n; done += ds.done; wDone += ds.wDone; wMax += ds.wMax;
       }
     }
     const full = d => { const ds = dayState(r, d); return ds.n > 0 && ds.done === ds.n; };
@@ -778,7 +796,7 @@ select:focus{outline:none;border-color:var(--accent)}
       if (!full(c)) break;
       streak++; c = addDays(c,-1);
     }
-    return { done, counted, points: done*pointsFor(r), pct: counted ? Math.round(done/counted*100) : null, streak };
+    return { done, counted, points: wDone, possible: wMax, pct: wMax ? Math.round(wDone/wMax*100) : null, streak };
   }
   const activeOn = d => state.routines.filter(r => units(r, d).length > 0);
 
@@ -799,7 +817,7 @@ select:focus{outline:none;border-color:var(--accent)}
     // Summary
     let done = 0, counted = 0, points = 0, possible = 0;
     const stats = {};
-    state.routines.forEach(r => { const s = statsFor(r); stats[r.id] = s; done += s.done; counted += s.counted; points += s.points; possible += s.counted * pointsFor(r); });
+    state.routines.forEach(r => { const s = statsFor(r); stats[r.id] = s; done += s.done; counted += s.counted; points += s.points; possible += s.possible; });
     $('sPoints').textContent = fmtNum(points);
     $('sPointsSub').textContent = fmtNum(done)+(done === 1 ? ' Aufgabe erledigt' : ' Aufgaben erledigt');
     // Gewichtet nach Sternen: erreichte Punkte ÷ mögliche Punkte
@@ -807,7 +825,7 @@ select:focus{outline:none;border-color:var(--accent)}
     $('sPctSub').textContent = possible ? fmtNum(points)+' von '+fmtNum(possible)+' P. · nach Sternen' : 'noch keine fälligen Aufgaben';
     const act = activeOn(state.sel);
     let dayDone = 0, dayN = 0, dayPts = 0, dayMax = 0;
-    act.forEach(r => { const ds = dayState(r, state.sel); dayDone += ds.done; dayN += ds.n; dayPts += ds.done*pointsFor(r); dayMax += ds.n*pointsFor(r); });
+    act.forEach(r => { const ds = dayState(r, state.sel); dayDone += ds.done; dayN += ds.n; dayPts += ds.wDone; dayMax += ds.wMax; });
     $('sDayLbl').textContent = state.sel === t ? 'Heute' : fmtShort(state.sel);
     $('sDay').textContent = dayDone+' / '+dayN;
     $('sDaySub').textContent = '+'+fmtNum(dayPts)+' von '+fmtNum(dayMax)+' P.';
@@ -821,7 +839,7 @@ select:focus{outline:none;border-color:var(--accent)}
       const a = activeOn(d);
       const b = document.createElement('button');
       let n = 0, nAll = 0, wDone = 0, wMax = 0;
-      a.forEach(r => { const ds = dayState(r, d); n += ds.done; nAll += ds.n; wDone += ds.done*pointsFor(r); wMax += ds.n*pointsFor(r); });
+      a.forEach(r => { const ds = dayState(r, d); n += ds.done; nAll += ds.n; wDone += ds.wDone; wMax += ds.wMax; });
       const miss = nAll - n;
       const ratio = wMax ? wDone / wMax : 0;
       b.style.height = a.length ? Math.max(8, Math.round(ratio*100))+'%' : '8%';
@@ -884,7 +902,7 @@ select:focus{outline:none;border-color:var(--accent)}
   }
   function markBtn(kind, pressed, label, onClick){
     const b = document.createElement('button'); b.type = 'button';
-    b.className = 'rbtn '+kind; b.innerHTML = kind === 'yes' ? ICON_OK : ICON_NO;
+    b.className = 'rbtn '+kind; b.innerHTML = kind.split(' ')[0] === 'yes' ? ICON_OK : ICON_NO;
     b.setAttribute('aria-pressed', pressed ? 'true' : 'false'); b.setAttribute('aria-label', label); b.title = label;
     b.addEventListener('click', onClick);
     return b;
@@ -922,9 +940,12 @@ select:focus{outline:none;border-color:var(--accent)}
         const key = r.id+':'+x.id, v = status(d0, key);
         const li2 = document.createElement('li'); li2.className = 'srow'; li2.dataset.s = v === true ? 'done' : v === false ? 'miss' : 'open';
         const n2 = document.createElement('span'); n2.className = 'sname'; n2.textContent = x.name;
+        const sx = starsWidget(stepStars(r, x), n => setStepStars(r, x.id, n), 'Wertigkeit von '+x.name); sx.classList.add('sm');
+        const px = document.createElement('span'); px.className = 'spts2'; px.textContent = fmtNum(pointsForStars(stepStars(r, x)));
+        const mid = document.createElement('div'); mid.className = 'smid'; mid.append(n2, sx, px);
         li2.append(
           markBtn('no sm', v === false, x.name+': nicht erledigt', () => setStatus(d0, key, v === false ? null : false)),
-          n2,
+          mid,
           markBtn('yes sm', v === true, x.name+': erledigt', () => setStatus(d0, key, v === true ? null : true))
         );
         ol.appendChild(li2);
@@ -933,8 +954,8 @@ select:focus{outline:none;border-color:var(--accent)}
     }
     if (r.desc){ const d = document.createElement('p'); d.className = 'rdesc'; d.textContent = r.desc; body.appendChild(d); }
     const line = document.createElement('div'); line.className = 'rline';
-    line.appendChild(starsWidget(starsOf(r), n => setStars(r, n), 'Wertigkeit von '+r.name));
-    const pts = document.createElement('span'); pts.className = 'starpts'; pts.textContent = fmtNum(pointsFor(r))+(rit ? ' P. je Schritt' : ' P.');
+    if (!rit) line.appendChild(starsWidget(starsOf(r), n => setStars(r, n), 'Wertigkeit von '+r.name));
+    const pts = document.createElement('span'); pts.className = 'starpts'; pts.textContent = rit ? 'bis '+fmtNum(ritualMax(r))+' P. pro Tag' : fmtNum(pointsFor(r))+' P.';
     line.appendChild(pts);
     const meta = document.createElement('span'); meta.className = 'rmeta';
     meta.textContent = daysLabel(daysOf(r))+' · '+fmtNum(s.points)+' P. gesamt · '+(s.pct === null ? '–' : s.pct+' %')+' · Serie '+s.streak;
@@ -981,7 +1002,7 @@ select:focus{outline:none;border-color:var(--accent)}
       const row = document.createElement('div'); row.className = 'mrow';
       const t = document.createElement('div'); t.className = 't';
       const a = document.createElement('div'); a.textContent = r.name;
-      const b = document.createElement('div'); b.textContent = (isRitual(r) ? 'Ritual · '+(r.steps || []).length+' Schritte · ' : '')+daysLabel(daysOf(r))+' · '+'★'.repeat(starsOf(r))+' · '+fmtNum(pointsFor(r))+(isRitual(r) ? ' P. je Schritt' : ' Punkte')+' · zählt ab '+parse(r.start).toLocaleDateString('de-DE');
+      const b = document.createElement('div'); b.textContent = (isRitual(r) ? 'Ritual · '+(r.steps || []).length+' Schritte · '+daysLabel(daysOf(r))+' · bis '+fmtNum(ritualMax(r))+' P./Tag' : daysLabel(daysOf(r))+' · '+'★'.repeat(starsOf(r))+' · '+fmtNum(pointsFor(r))+' Punkte')+' · zählt ab '+parse(r.start).toLocaleDateString('de-DE');
       t.append(a,b);
       const ed = document.createElement('button'); ed.className = 'small'; ed.textContent = 'Bearbeiten';
       ed.addEventListener('click', () => startEdit(r));
@@ -1231,6 +1252,12 @@ select:focus{outline:none;border-color:var(--accent)}
     box.appendChild(starsWidget(formStars, n => { formStars = n; renderFormStars(); }, 'Wertigkeit'));
     $('fStarsPts').textContent = fmtNum(pointsForStars(formStars))+' Punkte · '+STAR_WORDS[formStars];
   }
+  async function setStepStars(r, sid, n){
+    const st = (r.steps || []).find(x => x.id === sid); if (!st || stepStars(r, st) === n) return;
+    const steps = r.steps.map(x => x.id === sid ? Object.assign({}, x, { stars: n }) : Object.assign({ stars: stepStars(r, x) }, x));
+    if (!state.db){ r.steps = steps; persist(); render(); toast(st.name+': '+n+(n === 1 ? ' Stern' : ' Sterne')+' · '+fmtNum(pointsForStars(n))+' Punkte'); return; }
+    try { await state.db.doc('routines/'+r.id).update({ steps }); } catch(e){ toast(errMsg(e)); }
+  }
   async function setStars(r, n){
     if (starsOf(r) === n) return;
     if (!state.db){ r.stars = n; persist(); render(); toast(r.name+': '+n+(n === 1 ? ' Stern' : ' Sterne')+' · '+fmtNum(pointsForStars(n))+' Punkte'); return; }
@@ -1248,7 +1275,7 @@ select:focus{outline:none;border-color:var(--accent)}
     $('typeChipText').textContent = rit ? 'Ritual – eine Reihe von Schritten' : 'Einfache Routine';
     $('typeChange').hidden = !!state.editId;
     $('fName').placeholder = rit ? 'z. B. Morgenritual' : 'z. B. 30 Minuten Bewegung';
-    $('fStarsLbl').textContent = rit ? 'Wertigkeit (gilt für jeden Schritt)' : 'Wertigkeit';
+    $('fStarsLbl').hidden = rit; document.querySelector('.starfield').hidden = rit;
     if (!state.editId) $('fSubmit').textContent = rit ? 'Ritual anlegen' : 'Routine anlegen';
     renderStepEdit();
   }
@@ -1267,12 +1294,18 @@ select:focus{outline:none;border-color:var(--accent)}
       dn.addEventListener('click', () => { [formSteps[i+1], formSteps[i]] = [formSteps[i], formSteps[i+1]]; renderStepEdit(); });
       const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'iconbtn del'; rm.innerHTML = ICON_TRASH; rm.setAttribute('aria-label', 'Schritt entfernen');
       rm.addEventListener('click', () => { formSteps.splice(i,1); renderStepEdit(); });
-      li.append(inp, up, dn, rm); ol.appendChild(li);
+      const sw = starsWidget(st.stars || 1, n => { st.stars = n; renderStepEdit(); }, 'Wertigkeit von Schritt '+(i+1)); sw.classList.add('sm');
+      const row1 = document.createElement('div'); row1.className = 'se-top'; row1.append(inp, up, dn, rm);
+      const row2 = document.createElement('div'); row2.className = 'se-bot';
+      const pt = document.createElement('span'); pt.className = 'starpts'; pt.textContent = fmtNum(pointsForStars(st.stars || 1))+' P.';
+      row2.append(sw, pt);
+      const wrap = document.createElement('div'); wrap.className = 'se-wrap'; wrap.append(row1, row2);
+      li.appendChild(wrap); ol.appendChild(li);
     });
   }
   function addStepFromInput(){
     const v = $('stepName').value.trim(); if (!v){ $('stepName').focus(); return; }
-    formSteps.push({ id: stepId(), name: v, isNew: true });
+    formSteps.push({ id: stepId(), name: v, isNew: true, stars: 1 });
     $('stepName').value = ''; renderStepEdit(); $('stepName').focus();
   }
   $('stepAdd').addEventListener('click', addStepFromInput);
@@ -1304,7 +1337,7 @@ select:focus{outline:none;border-color:var(--accent)}
     state.editId = r.id;
     $('fName').value = r.name; $('fDesc').value = r.desc || ''; $('fStart').value = r.start;
     formStars = starsOf(r); renderFormStars(); formDays = daysOf(r).slice(); renderFormDays();
-    formSteps = (r.steps || []).map(st => Object.assign({}, st));
+    formSteps = (r.steps || []).map(st => Object.assign({}, st, { stars: stepStars(r, st) }));
     setFormType(isRitual(r) ? 'ritual' : 'simple');
     $('fSubmit').textContent = 'Änderungen speichern';
     $('fCancel').hidden = false; $('editHint').hidden = false;
@@ -1322,7 +1355,7 @@ select:focus{outline:none;border-color:var(--accent)}
     const data = { name, desc: $('fDesc').value.trim(), start, stars: formStars, type: formType, days: formDays.slice().sort() };
     if (formType === 'ritual'){
       if ($('stepName').value.trim()) addStepFromInput();
-      const steps = formSteps.map(st => ({ id: st.id, name: st.name.trim(), start: st.start })).filter(st => st.name);
+      const steps = formSteps.map(st => ({ id: st.id, name: st.name.trim(), start: st.start, stars: st.stars || 1 })).filter(st => st.name);
       if (!steps.length){ toast('Ein Ritual braucht mindestens einen Schritt.'); $('stepName').focus(); return; }
       const t = today();
       // Neue Schritte in einem bestehenden Ritual zählen ab heute, damit alte Tage nicht nachträglich als verpasst gelten
