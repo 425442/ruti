@@ -44,6 +44,16 @@ Persönliche App zum Festhalten und Bewerten täglicher Routinen – nutzbar am 
 - Letzte Erfassung 15 Minuten lang rückgängig machen, Einträge löschen, vergessene Zigaretten nachtragen.
 - Abstände zählen nur innerhalb eines Tages – die Nacht fließt nicht in die Durchschnitte ein.
 
+## Konten & Speicherung auf mehreren Geräten
+
+Auf dem eigenen Server (Hostinger, bollmer.click) läuft Ruti mit Benutzerkonten:
+Registrieren, Anmelden („Angemeldet bleiben“), sicheres Passwort vorschlagen, Passwort anzeigen,
+Passwort vergessen (Link per E-Mail), E-Mail bestätigen, Passwort ändern, Name ändern,
+Abmelden / auf allen Geräten abmelden, Konto löschen. Jede Änderung wird automatisch gespeichert
+und ist auf allen Geräten verfügbar; offline arbeitet Ruti mit dem letzten Stand weiter und gleicht später ab.
+
+Einrichtung: siehe [EINRICHTUNG-HOSTINGER.md](EINRICHTUNG-HOSTINGER.md). Server-Teil: `api/` (PHP + MySQL).
+
 ## Nutzung
 
 **Online:** https://425442.github.io/ruti/ – am PC und am Handy im Browser öffnen.
