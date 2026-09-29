@@ -397,6 +397,11 @@ select:focus{outline:none;border-color:var(--accent)}
 .rfoot{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
 .rfoot .dots{margin:0;flex:1;gap:2px}
 .rfoot .dots span{width:9px;height:9px}
+.wdpick{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:-6px}
+.wd{border:1.5px solid var(--line);background:var(--surface-2);border-radius:9px;padding:8px 0;font-weight:700;font-size:13.5px;color:var(--muted)}
+.wd.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.wdpresets{display:flex;gap:4px;flex-wrap:wrap;margin-top:-6px}
+.offday{font-size:12.5px;color:var(--muted);margin:8px 2px 0}
 /* Placeholder tabs */
 .soon{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:28px 22px;margin-top:14px;max-width:620px}
 .soon h2{font-size:24px;margin-bottom:8px}
@@ -453,6 +458,7 @@ select:focus{outline:none;border-color:var(--accent)}
           </div>
         </div>
         <ul class="list" id="checkList"></ul>
+        <p class="offday" id="offDay" hidden></p>
         <p class="note">✗ nicht erledigt · ✓ erledigt · Titel antippen für Details und Sterne · Zum Umsortieren eine Zeile ziehen (am Handy kurz gedrückt halten).</p>
       </div>
 
@@ -488,6 +494,13 @@ select:focus{outline:none;border-color:var(--accent)}
           <div class="starfield">
             <div id="fStars"></div>
             <span class="starpts" id="fStarsPts"></span>
+          </div>
+          <div class="fieldlbl">An welchen Tagen?</div>
+          <div class="wdpick" id="fDays" role="group" aria-label="Wochentage"></div>
+          <div class="wdpresets">
+            <button type="button" class="small" data-preset="1234567">Täglich</button>
+            <button type="button" class="small" data-preset="12345">Mo–Fr</button>
+            <button type="button" class="small" data-preset="67">Wochenende</button>
           </div>
           <label for="fStart">Zählt ab
             <input type="date" id="fStart" required>
@@ -726,8 +739,19 @@ select:focus{outline:none;border-color:var(--accent)}
   }
   const isRitual = r => r && r.type === 'ritual';
   // Aufgaben einer Routine an einem Tag: einfache Routine = 1, Ritual = aktive Schritte
+  const WD = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+  const weekdayOf = d => ((parse(d).getDay() + 6) % 7) + 1;          // 1 = Montag … 7 = Sonntag
+  const daysOf = r => Array.isArray(r.days) && r.days.length ? r.days : [1,2,3,4,5,6,7];
+  const plannedOn = (r, d) => daysOf(r).includes(weekdayOf(d));
+  function daysLabel(days){
+    const k = [...days].sort().join('');
+    if (k === '1234567') return 'täglich';
+    if (k === '12345') return 'Mo–Fr';
+    if (k === '67') return 'Sa + So';
+    return [...days].sort().map(n => WD[n-1]).join(', ');
+  }
   function units(r, d){
-    if (d < r.start) return [];
+    if (d < r.start || !plannedOn(r, d)) return [];
     if (!isRitual(r)) return [r.id];
     return (r.steps || []).filter(st => (st.start || r.start) <= d).map(st => r.id+':'+st.id);
   }
@@ -746,9 +770,14 @@ select:focus{outline:none;border-color:var(--accent)}
       }
     }
     const full = d => { const ds = dayState(r, d); return ds.n > 0 && ds.done === ds.n; };
+    // Serie: nur geplante Tage zählen, freie Tage unterbrechen nicht
     let streak = 0, c = t;
-    if (!full(c)) c = addDays(c,-1);
-    while (c >= r.start && full(c)){ streak++; c = addDays(c,-1); }
+    if (!units(r, c).length || !full(c)) c = addDays(c,-1);
+    while (c >= r.start){
+      if (!units(r, c).length){ c = addDays(c,-1); continue; }
+      if (!full(c)) break;
+      streak++; c = addDays(c,-1);
+    }
     return { done, counted, points: done*pointsFor(r), pct: counted ? Math.round(done/counted*100) : null, streak };
   }
   const activeOn = d => state.routines.filter(r => units(r, d).length > 0);
@@ -821,10 +850,16 @@ select:focus{outline:none;border-color:var(--accent)}
       b.addEventListener('click', addExamples);
       li.appendChild(b); list.appendChild(li);
     } else if (!act.length){
-      list.innerHTML = '<li class="empty"><p>An diesem Tag war noch keine Routine aktiv.</p></li>';
+      list.innerHTML = '<li class="empty"><p>An diesem Tag ist keine Routine geplant.</p></li>';
     } else {
       act.forEach(r => list.appendChild(rowItem(r, stats[r.id])));
     }
+    const off = state.routines.filter(r => r.start <= state.sel && !plannedOn(r, state.sel));
+    const offBox = $('offDay');
+    if (off.length){
+      offBox.hidden = false;
+      offBox.textContent = (state.sel === t ? 'Heute frei: ' : 'An diesem Tag frei: ')+off.map(r => r.name+' ('+daysLabel(daysOf(r))+')').join(' · ');
+    } else offBox.hidden = true;
 
     renderManage();
   }
@@ -902,7 +937,7 @@ select:focus{outline:none;border-color:var(--accent)}
     const pts = document.createElement('span'); pts.className = 'starpts'; pts.textContent = fmtNum(pointsFor(r))+(rit ? ' P. je Schritt' : ' P.');
     line.appendChild(pts);
     const meta = document.createElement('span'); meta.className = 'rmeta';
-    meta.textContent = fmtNum(s.points)+' P. gesamt · '+(s.pct === null ? '–' : s.pct+' %')+' · Serie '+s.streak;
+    meta.textContent = daysLabel(daysOf(r))+' · '+fmtNum(s.points)+' P. gesamt · '+(s.pct === null ? '–' : s.pct+' %')+' · Serie '+s.streak;
     line.appendChild(meta);
     body.appendChild(line);
     const dots = document.createElement('div'); dots.className = 'dots'; dots.setAttribute('aria-hidden','true');
@@ -946,7 +981,7 @@ select:focus{outline:none;border-color:var(--accent)}
       const row = document.createElement('div'); row.className = 'mrow';
       const t = document.createElement('div'); t.className = 't';
       const a = document.createElement('div'); a.textContent = r.name;
-      const b = document.createElement('div'); b.textContent = (isRitual(r) ? 'Ritual · '+(r.steps || []).length+' Schritte · ' : '')+'★'.repeat(starsOf(r))+' · '+fmtNum(pointsFor(r))+(isRitual(r) ? ' P. je Schritt' : ' Punkte')+' · zählt ab '+parse(r.start).toLocaleDateString('de-DE');
+      const b = document.createElement('div'); b.textContent = (isRitual(r) ? 'Ritual · '+(r.steps || []).length+' Schritte · ' : '')+daysLabel(daysOf(r))+' · '+'★'.repeat(starsOf(r))+' · '+fmtNum(pointsFor(r))+(isRitual(r) ? ' P. je Schritt' : ' Punkte')+' · zählt ab '+parse(r.start).toLocaleDateString('de-DE');
       t.append(a,b);
       const ed = document.createElement('button'); ed.className = 'small'; ed.textContent = 'Bearbeiten';
       ed.addEventListener('click', () => startEdit(r));
@@ -1245,8 +1280,20 @@ select:focus{outline:none;border-color:var(--accent)}
   document.querySelectorAll('.typeopt').forEach(b => b.addEventListener('click', () => { setFormType(b.dataset.type); $('fName').focus(); }));
   $('typeChange').addEventListener('click', () => setFormType(null));
 
+  let formDays = [1,2,3,4,5,6,7];
+  function renderFormDays(){
+    const box = $('fDays'); box.innerHTML = '';
+    WD.forEach((w, i) => {
+      const n = i+1, on = formDays.includes(n);
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'wd'+(on ? ' on' : ''); b.textContent = w;
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.addEventListener('click', () => { formDays = on ? formDays.filter(x => x !== n) : formDays.concat(n); renderFormDays(); });
+      box.appendChild(b);
+    });
+  }
+  document.querySelectorAll('.wdpresets button').forEach(b => b.addEventListener('click', () => { formDays = b.dataset.preset.split('').map(Number); renderFormDays(); }));
   function resetForm(){
-    formStars = 1; renderFormStars();
+    formStars = 1; renderFormStars(); formDays = [1,2,3,4,5,6,7]; renderFormDays();
     state.editId = null; formSteps = [];
     $('fName').value = ''; $('fDesc').value = ''; $('fStart').value = today(); $('stepName').value = '';
     $('fSubmit').textContent = 'Routine anlegen';
@@ -1256,7 +1303,7 @@ select:focus{outline:none;border-color:var(--accent)}
   function startEdit(r){
     state.editId = r.id;
     $('fName').value = r.name; $('fDesc').value = r.desc || ''; $('fStart').value = r.start;
-    formStars = starsOf(r); renderFormStars();
+    formStars = starsOf(r); renderFormStars(); formDays = daysOf(r).slice(); renderFormDays();
     formSteps = (r.steps || []).map(st => Object.assign({}, st));
     setFormType(isRitual(r) ? 'ritual' : 'simple');
     $('fSubmit').textContent = 'Änderungen speichern';
@@ -1271,7 +1318,8 @@ select:focus{outline:none;border-color:var(--accent)}
     const name = $('fName').value.trim();
     if (!name){ toast('Bitte einen Namen eingeben.'); $('fName').focus(); return; }
     const start = $('fStart').value || today();
-    const data = { name, desc: $('fDesc').value.trim(), start, stars: formStars, type: formType };
+    if (!formDays.length){ toast('Bitte mindestens einen Wochentag wählen.'); return; }
+    const data = { name, desc: $('fDesc').value.trim(), start, stars: formStars, type: formType, days: formDays.slice().sort() };
     if (formType === 'ritual'){
       if ($('stepName').value.trim()) addStepFromInput();
       const steps = formSteps.map(st => ({ id: st.id, name: st.name.trim(), start: st.start })).filter(st => st.name);
