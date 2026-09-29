@@ -321,6 +321,17 @@ select:focus{outline:none;border-color:var(--accent)}
 .carry-card[data-s="over"] .cc-note{background:var(--miss-soft)}
 @media (max-width:620px){.carry-card{grid-template-columns:minmax(0,1fr)}}
 .bc-sub div + div{margin-top:2px}
+.namerow{display:flex;align-items:center;gap:4px 10px;flex-wrap:wrap}
+.stars{display:inline-flex;gap:1px}
+.star{border:0;background:none;padding:2px 1px;font-size:18px;line-height:1;color:var(--empty);cursor:pointer}
+.star.on{color:#E0A100}
+.star:hover{transform:scale(1.15)}
+.starpts{font-size:12.5px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.fieldlbl{font-size:12.5px;font-weight:600;color:var(--muted)}
+.starfield{display:flex;align-items:center;gap:10px;margin-top:-6px}
+.starfield .star{font-size:26px;padding:2px 3px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .star.on{color:#F2B92E}}
+:root[data-theme="dark"] .star.on{color:#F2B92E}
 /* Placeholder tabs */
 .soon{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:28px 22px;margin-top:14px;max-width:620px}
 .soon h2{font-size:24px;margin-bottom:8px}
@@ -390,6 +401,11 @@ select:focus{outline:none;border-color:var(--accent)}
           <label for="fDesc">Beschreibung
             <textarea id="fDesc" maxlength="300" placeholder="Was genau zählt als erledigt?"></textarea>
           </label>
+          <div class="fieldlbl" id="fStarsLbl">Wertigkeit</div>
+          <div class="starfield">
+            <div id="fStars"></div>
+            <span class="starpts" id="fStarsPts"></span>
+          </div>
           <label for="fStart">Zählt ab
             <input type="date" id="fStart" required>
           </label>
@@ -592,6 +608,22 @@ select:focus{outline:none;border-color:var(--accent)}
 <script>
 (function(){
   const POINTS = 10;
+  const starsOf = r => Math.min(5, Math.max(1, Math.round(Number(r && r.stars) || 1)));
+  const pointsForStars = n => POINTS + (n - 1) * 2.5;   // 1★ 10 · 2★ 12,5 · 3★ 15 · 4★ 17,5 · 5★ 20
+  const pointsFor = r => pointsForStars(starsOf(r));
+  const STAR_WORDS = ['', 'normal', 'etwas wichtiger', 'wichtig', 'sehr wichtig', 'besonders wichtig'];
+  function starsWidget(value, onPick, label){
+    const w = document.createElement('div'); w.className = 'stars'; w.setAttribute('role', 'radiogroup'); w.setAttribute('aria-label', label || 'Wertigkeit');
+    for (let i = 1; i <= 5; i++){
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'star'+(i <= value ? ' on' : '');
+      b.textContent = '★'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', i === value ? 'true' : 'false');
+      b.setAttribute('aria-label', i+(i === 1 ? ' Stern' : ' Sterne')+' – '+fmtNum(pointsForStars(i))+' Punkte');
+      b.title = i+(i === 1 ? ' Stern' : ' Sterne')+' · '+fmtNum(pointsForStars(i))+' Punkte';
+      b.addEventListener('click', ev => { ev.stopPropagation(); onPick(i); });
+      w.appendChild(b);
+    }
+    return w;
+  }
   const $ = id => document.getElementById(id);
   const pad = n => String(n).padStart(2,'0');
   const ymd = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
@@ -624,7 +656,7 @@ select:focus{outline:none;border-color:var(--accent)}
     let streak = 0, c = t;
     if (status(c, r.id) !== true) c = addDays(c,-1);
     while (c >= r.start && status(c, r.id) === true){ streak++; c = addDays(c,-1); }
-    return { done, counted, points: done*POINTS, pct: counted ? Math.round(done/counted*100) : null, streak };
+    return { done, counted, points: done*pointsFor(r), pct: counted ? Math.round(done/counted*100) : null, streak };
   }
   const activeOn = d => state.routines.filter(r => r.start <= d);
 
@@ -643,18 +675,20 @@ select:focus{outline:none;border-color:var(--accent)}
     $('backup').hidden = state.mode !== 'local';
 
     // Summary
-    let done = 0, counted = 0;
+    let done = 0, counted = 0, points = 0;
     const stats = {};
-    state.routines.forEach(r => { const s = statsFor(r); stats[r.id] = s; done += s.done; counted += s.counted; });
-    $('sPoints').textContent = fmtNum(done*POINTS);
-    $('sPointsSub').textContent = done === 1 ? '1 erledigte Routine × 10' : fmtNum(done)+' erledigte Routinen × 10';
+    state.routines.forEach(r => { const s = statsFor(r); stats[r.id] = s; done += s.done; counted += s.counted; points += s.points; });
+    $('sPoints').textContent = fmtNum(points);
+    $('sPointsSub').textContent = fmtNum(done)+(done === 1 ? ' erledigte Routine' : ' erledigte Routinen')+' · 10–20 Punkte je nach Sternen';
     $('sPct').textContent = counted ? Math.round(done/counted*100)+' %' : '–';
     $('sPctSub').textContent = counted ? fmtNum(done)+' von '+fmtNum(counted)+' fälligen Aufgaben' : 'noch keine fälligen Aufgaben';
     const act = activeOn(state.sel);
     const dayDone = act.filter(r => status(state.sel, r.id) === true).length;
     $('sDayLbl').textContent = state.sel === t ? 'Heute' : fmtShort(state.sel);
     $('sDay').textContent = dayDone+' / '+act.length;
-    $('sDaySub').textContent = '+'+fmtNum(dayDone*POINTS)+' Punkte an diesem Tag';
+    const dayPts = act.filter(r => status(state.sel, r.id) === true).reduce((a,r) => a + pointsFor(r), 0);
+    const dayMax = act.reduce((a,r) => a + pointsFor(r), 0);
+    $('sDaySub').textContent = '+'+fmtNum(dayPts)+' von '+fmtNum(dayMax)+' möglichen Punkten';
 
     // 30-Tage-Streifen
     const strip = $('strip'); strip.innerHTML = '';
@@ -716,8 +750,13 @@ select:focus{outline:none;border-color:var(--accent)}
     mark.innerHTML = st === false ? ICON_NO : ICON_OK;
 
     const info = document.createElement('div');
+    const nrow = document.createElement('div'); nrow.className = 'namerow';
     const name = document.createElement('div'); name.className = 'name'; name.textContent = r.name;
-    info.appendChild(name);
+    const sw = starsWidget(starsOf(r), n => setStars(r, n), 'Wertigkeit von '+r.name);
+    const pts = document.createElement('span'); pts.className = 'starpts'; pts.textContent = fmtNum(pointsFor(r))+' P.';
+    pts.title = fmtNum(pointsFor(r))+' Punkte pro Tag, wenn erledigt';
+    nrow.append(name, sw, pts);
+    info.appendChild(nrow);
     if (r.desc){ const d = document.createElement('div'); d.className = 'desc'; d.textContent = r.desc; info.appendChild(d); }
     const meta = document.createElement('div'); meta.className = 'meta';
     meta.innerHTML = '<span><b>'+fmtNum(s.points)+'</b> Punkte</span><span><b>'+(s.pct === null ? '–' : s.pct+' %')+'</b> zuverlässig</span><span>Serie <b>'+s.streak+'</b> '+(s.streak === 1 ? 'Tag' : 'Tage')+'</span>';
@@ -772,7 +811,7 @@ select:focus{outline:none;border-color:var(--accent)}
       const row = document.createElement('div'); row.className = 'mrow';
       const t = document.createElement('div'); t.className = 't';
       const a = document.createElement('div'); a.textContent = r.name;
-      const b = document.createElement('div'); b.textContent = 'zählt ab '+parse(r.start).toLocaleDateString('de-DE');
+      const b = document.createElement('div'); b.textContent = '★'.repeat(starsOf(r))+' · '+fmtNum(pointsFor(r))+' Punkte · zählt ab '+parse(r.start).toLocaleDateString('de-DE');
       t.append(a,b);
       const ed = document.createElement('button'); ed.className = 'small'; ed.textContent = 'Bearbeiten';
       ed.addEventListener('click', () => startEdit(r));
@@ -988,7 +1027,7 @@ select:focus{outline:none;border-color:var(--accent)}
       animation: 160,
       delay: 220, delayOnTouchOnly: true, touchStartThreshold: 8,
       forceFallback: true, fallbackTolerance: 4,
-      filter: '.pill, .small, .btn, .iconbtn, .confirm, input, textarea',
+      filter: '.pill, .small, .btn, .iconbtn, .confirm, .star, input, textarea',
       preventOnFilter: false,
       ghostClass: 'drag-ghost', chosenClass: 'drag-chosen', fallbackClass: 'drag-float',
       scroll: true, scrollSensitivity: 80, scrollSpeed: 14, bubbleScroll: true,
@@ -1004,7 +1043,19 @@ select:focus{outline:none;border-color:var(--accent)}
   initSort($('manageList'));
 
   /* ---------- Formular ---------- */
+  let formStars = 1;
+  function renderFormStars(){
+    const box = $('fStars'); box.innerHTML = '';
+    box.appendChild(starsWidget(formStars, n => { formStars = n; renderFormStars(); }, 'Wertigkeit'));
+    $('fStarsPts').textContent = fmtNum(pointsForStars(formStars))+' Punkte · '+STAR_WORDS[formStars];
+  }
+  async function setStars(r, n){
+    if (starsOf(r) === n) return;
+    if (!state.db){ r.stars = n; persist(); render(); toast(r.name+': '+n+(n === 1 ? ' Stern' : ' Sterne')+' · '+fmtNum(pointsForStars(n))+' Punkte'); return; }
+    try { await state.db.doc('routines/'+r.id).update({ stars: n }); } catch(e){ toast(errMsg(e)); }
+  }
   function resetForm(){
+    formStars = 1; renderFormStars();
     state.editId = null;
     $('fName').value = ''; $('fDesc').value = ''; $('fStart').value = today();
     $('fSubmit').textContent = 'Routine anlegen';
@@ -1013,6 +1064,7 @@ select:focus{outline:none;border-color:var(--accent)}
   function startEdit(r){
     state.editId = r.id;
     $('fName').value = r.name; $('fDesc').value = r.desc || ''; $('fStart').value = r.start;
+    formStars = starsOf(r); renderFormStars();
     $('fSubmit').textContent = 'Änderungen speichern';
     $('fCancel').hidden = false; $('editHint').hidden = false;
     $('editHint').textContent = 'Du bearbeitest: '+r.name;
@@ -1022,7 +1074,7 @@ select:focus{outline:none;border-color:var(--accent)}
     e.preventDefault();
     const name = $('fName').value.trim();
     if (!name){ $('fName').focus(); return; }
-    const data = { name, desc: $('fDesc').value.trim(), start: $('fStart').value || today() };
+    const data = { name, desc: $('fDesc').value.trim(), start: $('fStart').value || today(), stars: formStars };
     const id = state.editId;
     resetForm();
     await saveRoutine(data, id);
