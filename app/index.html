@@ -420,6 +420,12 @@ select:focus{outline:none;border-color:var(--accent)}
 .se-top{display:flex;gap:4px;align-items:center}
 .se-top input{flex:1;min-width:0}
 .se-bot{display:flex;align-items:center;gap:8px;padding-left:2px}
+.rstats{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}
+.rsper{justify-content:center;padding:6px}
+.perseg{display:flex;flex-direction:column;gap:2px}
+.perseg button{border:0;background:none;border-radius:7px;padding:3px 10px;font-size:12.5px;font-weight:700;color:var(--muted);text-align:center}
+.perseg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+@media (min-width:620px){.perseg{flex-direction:row}.perseg button{padding:7px 12px;font-size:13.5px}}
 /* Placeholder tabs */
 .soon{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:28px 22px;margin-top:14px;max-width:620px}
 .soon h2{font-size:24px;margin-bottom:8px}
@@ -454,9 +460,15 @@ select:focus{outline:none;border-color:var(--accent)}
   <section id="tab-routinen" role="tabpanel" aria-labelledby="t-routinen">
     <div id="banner"></div>
     <div class="rstats">
-      <div class="rs"><b id="sDay">0 / 0</b><span id="sDayLbl">Heute</span><small id="sDaySub"></small></div>
-      <div class="rs"><b id="sPct">–</b><span>zuverlässig</span><small id="sPctSub"></small></div>
-      <div class="rs"><b id="sPoints">0</b><span>Punkte gesamt</span><small id="sPointsSub"></small></div>
+      <div class="rs"><b id="sPoints">0 / 0</b><span id="sPtsLbl">Punkte heute</span></div>
+      <div class="rs"><b id="sPct">–</b><span id="sPctLbl">zuverlässig heute</span></div>
+      <div class="rs rsper">
+        <div class="perseg" id="rPer" role="group" aria-label="Zeitraum">
+          <button type="button" data-p="day" aria-pressed="true">Tag</button>
+          <button type="button" data-p="week" aria-pressed="false">Woche</button>
+          <button type="button" data-p="month" aria-pressed="false">Monat</button>
+        </div>
+      </div>
     </div>
     <details class="hist" id="histBox">
       <summary>Verlauf der letzten 30 Tage</summary>
@@ -828,20 +840,24 @@ select:focus{outline:none;border-color:var(--accent)}
     $('backup').hidden = state.mode !== 'local';
 
     // Summary
-    let done = 0, counted = 0, points = 0, possible = 0;
     const stats = {};
-    state.routines.forEach(r => { const s = statsFor(r); stats[r.id] = s; done += s.done; counted += s.counted; points += s.points; possible += s.possible; });
-    $('sPoints').textContent = fmtNum(points);
-    $('sPointsSub').textContent = fmtNum(done)+(done === 1 ? ' Aufgabe erledigt' : ' Aufgaben erledigt');
-    // Gewichtet nach Sternen: erreichte Punkte ÷ mögliche Punkte
-    $('sPct').textContent = possible ? Math.round(points/possible*100)+' %' : '–';
-    $('sPctSub').textContent = possible ? fmtNum(points)+' von '+fmtNum(possible)+' P. · nach Sternen' : 'noch keine fälligen Aufgaben';
+    state.routines.forEach(r => { stats[r.id] = statsFor(r); });
     const act = activeOn(state.sel);
-    let dayDone = 0, dayN = 0, dayPts = 0, dayMax = 0;
-    act.forEach(r => { const ds = dayState(r, state.sel); dayDone += ds.done; dayN += ds.n; dayPts += ds.wDone; dayMax += ds.wMax; });
-    $('sDayLbl').textContent = state.sel === t ? 'Heute' : fmtShort(state.sel);
-    $('sDay').textContent = dayDone+' / '+dayN;
-    $('sDaySub').textContent = '+'+fmtNum(dayPts)+' von '+fmtNum(dayMax)+' P.';
+
+    // Kopfzeile: Punkte und Zuverlässigkeit für Tag / Woche / Monat (Bezug: gewählter Tag)
+    const P = state.rPer || 'day';
+    let from = state.sel, to = state.sel, perName;
+    if (P === 'week'){ from = weekStart(state.sel); to = addDays(from, 6); perName = 'KW '+isoWeek(from); }
+    else if (P === 'month'){ const dt = parse(state.sel); from = ymd(new Date(dt.getFullYear(), dt.getMonth(), 1)); to = ymd(new Date(dt.getFullYear(), dt.getMonth()+1, 0)); perName = dt.toLocaleDateString('de-DE', { month:'long' }); }
+    else perName = state.sel === t ? 'heute' : state.sel === addDays(t,-1) ? 'gestern' : fmtShort(state.sel);
+    if (to > t) to = t;
+    let pDone = 0, pMax = 0;
+    for (let d = from; d <= to; d = addDays(d,1)) state.routines.forEach(r => { const ds = dayState(r, d); pDone += ds.wDone; pMax += ds.wMax; });
+    $('sPoints').textContent = fmtNum(pDone)+' / '+fmtNum(pMax);
+    $('sPtsLbl').textContent = 'Punkte '+perName;
+    $('sPct').textContent = pMax ? Math.round(pDone/pMax*100)+' %' : '–';
+    $('sPctLbl').textContent = 'zuverlässig '+perName;
+    document.querySelectorAll('#rPer button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === P ? 'true' : 'false'));
 
     // 30-Tage-Streifen
     const strip = $('strip'); strip.innerHTML = '';
@@ -1255,6 +1271,11 @@ select:focus{outline:none;border-color:var(--accent)}
       }
     });
   }
+  try { state.rPer = localStorage.getItem('ruti-rper') || 'day'; } catch(e){ state.rPer = 'day'; }
+  document.querySelectorAll('#rPer button').forEach(b => b.addEventListener('click', () => {
+    state.rPer = b.dataset.p; try { localStorage.setItem('ruti-rper', state.rPer); } catch(e){}
+    render();
+  }));
   initSort($('checkList'));
   initSort($('manageList'));
 
